@@ -27,8 +27,7 @@ public final class Result<T, E> extends BaseResult<T, E> {
         return Implementations.map(function, Result::success, Result::error, this);
     }
 
-    public <N> OptionalResult<N, E> mapToOptional(
-            Function<? super T, Optional<N>> function) {
+    public <N> OptionalResult<N, E> mapToOptional(Function<? super T, Optional<N>> function) {
         return Implementations.map(
                 function,
                 OptionalResult::success,
@@ -48,17 +47,17 @@ public final class Result<T, E> extends BaseResult<T, E> {
         return (Result<N, E>)Implementations.flatMap(function, this);
     }
 
-    public <N> OptionalResult<N, E> flatMapToOptional(
+    public <N> OptionalResult<N, E> flatMapToOptionalResult(
             Function<? super T, OptionalResult<N, E>> function) {
         return Implementations.flatMap(function, this, OptionalResult::error);
     }
 
-    public <N> BooleanResult<E> flatMapToBoolean(
+    public <N> BooleanResult<E> flatMapToBooleanResult(
             Function<? super T, BooleanResult<E>> function) {
         return Implementations.flatMap(function, this, BooleanResult::error);
     }
 
-    public <N> VoidResult<E> flatMapToVoid(
+    public <N> VoidResult<E> flatMapToVoidResult(
             Function<? super T, VoidResult<E>> function) {
         return Implementations.flatMap(function, this, VoidResult::error);
     }

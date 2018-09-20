@@ -47,11 +47,11 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
                 this);
     }
 
-    public VoidResult<E> flatReplace(Supplier<VoidResult<? extends E>> supplier) {
+    public VoidResult<E> flatReplaceToVoidResult(Supplier<VoidResult<? extends E>> supplier) {
         return (VoidResult<E>) Implementations.flatMap(val -> supplier.get(), this);
     }
 
-    public <N> Result<N, E> flatReplaceToResult(
+    public <N> Result<N, E> flatReplace(
             Supplier<Result<? extends N, ? extends E>> supplier) {
         return (Result<N, E>) Implementations.flatMap(
                 val -> supplier.get(),

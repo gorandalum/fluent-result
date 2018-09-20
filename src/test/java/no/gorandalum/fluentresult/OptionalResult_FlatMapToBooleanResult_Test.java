@@ -5,15 +5,15 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-class OptionalResult_FlatMapToResult_Test {
+class OptionalResult_FlatMapToBooleanResult_Test {
 
     @Test
-    void flatMapToResult_success_shouldFlatMapValue() {
+    void flatMapToBooleanResult_success_shouldFlatMapValue() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
-        result.flatMapToResult(
-                maybeVal -> Result.success(maybeVal.map(String::length).orElse(3)))
+        result.flatMapToBooleanResult(
+                maybeVal -> BooleanResult.success(maybeVal.map(String::isEmpty).orElse(true)))
                 .consumeEither(
-                        val -> assertThat(val).isEqualTo(7),
+                        val -> assertThat(val).isFalse(),
                         err -> fail("Should not be error")
                 );
     }

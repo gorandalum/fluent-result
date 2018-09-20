@@ -2,20 +2,18 @@ package no.gorandalum.fluentresult;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 class OptionalResult_Map_Test {
 
     @Test
     void map_success_successfullyMapValue() {
-        OptionalResult<Integer, String> result =
+        Result<Integer, String> result =
                 OptionalResult.<String, String>success("Success")
-                        .map(maybeVal -> Optional.of(7));
+                        .map(maybeVal -> maybeVal.map(String::length).orElse(4));
         result.consumeEither(
                 val -> assertThat(val).isEqualTo(7),
-                () -> fail("Should not be empty"),
-                err -> fail("Expected no error"));
+                err -> fail("Should not be error"));
     }
 }

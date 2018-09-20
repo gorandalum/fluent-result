@@ -9,12 +9,11 @@ class BooleanResult_Map_Test {
 
     @Test
     void map_success_successfullyMapValue() {
-        BooleanResult<String> result =
+        Result<Integer, String> result =
                 BooleanResult.<String>success(true)
-                        .map(val -> !val);
+                        .map(val -> val ? 5 : 3);
         result.consumeEither(
-                () -> fail("Should not be empty"),
-                () -> {},
-                err -> fail("Expected no error"));
+                val -> assertThat(val).isEqualTo(5),
+                err -> fail("Should not be error"));
     }
 }

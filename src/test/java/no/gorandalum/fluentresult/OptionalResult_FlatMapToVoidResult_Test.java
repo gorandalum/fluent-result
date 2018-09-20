@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-class Result_FlatMapToVoid_Test {
+class OptionalResult_FlatMapToVoidResult_Test {
 
     @Test
-    void flatMapToVoid_success_shouldFlatMapValue() {
-        Result<String, String> result = Result.success("Success");
-        result.flatMapToVoid(val -> VoidResult.success())
+    void flatMapToVoidResult_success_shouldFlatMapValue() {
+        OptionalResult<String, String> result = OptionalResult.success("Success");
+        result.flatMapToVoidResult(
+                maybeVal -> VoidResult.success())
                 .consumeEither(
                         () -> {},
                         err -> fail("Should not be error")

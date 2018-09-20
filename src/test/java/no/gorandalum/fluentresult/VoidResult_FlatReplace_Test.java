@@ -8,22 +8,22 @@ import static org.assertj.core.api.Assertions.fail;
 class VoidResult_FlatReplace_Test {
 
     @Test
-    void flatReplace_success_flatReplaceWithSuccessVoidResult() {
-        VoidResult<String> result =
+    void flatReplace_success_flatReplaceWithSuccessResult() {
+        Result<String, String> result =
                 VoidResult.<String>success()
-                        .flatReplace(VoidResult::success);
+                        .flatReplace(() -> Result.success("Success"));
         result.consumeEither(
-                () -> {},
+                val -> assertThat(val).isEqualTo("Success"),
                 err -> fail("Expected no error"));
     }
 
     @Test
-    void flatReplace_success_flatReplaceWithErrorVoidResult() {
-        VoidResult<String> result =
-                VoidResult.<String>success()
-                        .flatReplace(() -> VoidResult.error("Error"));
+    void flatReplace_error_shouldKeepOriginalError() {
+        Result<String, String> result =
+                VoidResult.error("Error")
+                        .flatReplace(() -> Result.success("Success"));
         result.consumeEither(
-                () -> fail("Should not be success"),
+                val -> fail("Should not have value"),
                 err -> assertThat(err).isEqualTo("Error"));
     }
 }

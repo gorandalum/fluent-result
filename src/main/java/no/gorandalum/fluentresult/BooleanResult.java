@@ -31,13 +31,13 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
         return new BooleanResult<>(null, Objects.requireNonNull(error));
     }
 
-    public BooleanResult<E> map(
+    public BooleanResult<E> mapToBoolean(
             Function<Boolean, Boolean> function) {
         return Implementations.map(
                 function, BooleanResult::success, BooleanResult::error, this);
     }
 
-    public <N> Result<N, E> mapToResult(Function<Boolean, ? extends N> function) {
+    public <N> Result<N, E> map(Function<Boolean, ? extends N> function) {
         return Implementations.map(function, Result::success, Result::error, this);
     }
 
@@ -50,22 +50,22 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
                 this);
     }
 
-    public BooleanResult<E> flatMap(
+    public BooleanResult<E> flatMapToBoolean(
             Function<Boolean, BooleanResult<? extends E>> function) {
         return (BooleanResult<E>) Implementations.flatMap(function, this);
     }
 
-    public <N> Result<N, E> flatMapToResult(
+    public <N> Result<N, E> flatMap(
             Function<Boolean, Result<? extends N, ? extends E>> function) {
         return (Result<N, E>) Implementations.flatMap(function, this, Result::error);
     }
 
-    public <N> OptionalResult<N, E> flatMapToOptional(
+    public <N> OptionalResult<N, E> flatMapToOptionalResult(
             Function<Boolean, OptionalResult<? extends N, ? extends E>> function) {
         return (OptionalResult<N, E>) Implementations.flatMap(function, this, OptionalResult::error);
     }
 
-    public <N> VoidResult<E> flatMapToVoid(
+    public <N> VoidResult<E> flatMapToVoidResult(
             Function<Boolean, VoidResult<? extends E>> function) {
         return (VoidResult<E>) Implementations.flatMap(function, this, VoidResult::error);
     }

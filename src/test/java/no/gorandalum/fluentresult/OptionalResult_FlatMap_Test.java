@@ -2,7 +2,8 @@ package no.gorandalum.fluentresult;
 
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 class OptionalResult_FlatMap_Test {
 
@@ -10,11 +11,9 @@ class OptionalResult_FlatMap_Test {
     void flatMap_success_shouldFlatMapValue() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
         result.flatMap(
-                maybeVal ->
-                        OptionalResult.success(maybeVal.map(String::length).orElse(3)))
+                maybeVal -> Result.success(maybeVal.map(String::length).orElse(3)))
                 .consumeEither(
                         val -> assertThat(val).isEqualTo(7),
-                        () -> fail("Should not be empty"),
                         err -> fail("Should not be error")
                 );
     }

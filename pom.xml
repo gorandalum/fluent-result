@@ -90,9 +90,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <targetClasses>
-
-                    </targetClasses>
+                    <mutationThreshold>100</mutationThreshold>
                 </configuration>
             </plugin>
         </plugins>

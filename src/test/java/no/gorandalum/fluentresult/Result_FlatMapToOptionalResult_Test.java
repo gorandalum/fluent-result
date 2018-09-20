@@ -2,19 +2,20 @@ package no.gorandalum.fluentresult;
 
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.fail;
 
-class BooleanResult_FlatMapToOptionalResult_Test {
+class Result_FlatMapToOptionalResult_Test {
 
     @Test
     void flatMapToOptionalResult_success_shouldFlatMapValue() {
-        BooleanResult.success(true)
-                .flatMapToOptionalResult(val -> OptionalResult.success(val ? "Success" : "Failure"))
+        Result<String, String> result = Result.success("Success");
+        result.flatMapToOptionalResult(val -> OptionalResult.success(val.length()))
                 .consumeEither(
-                        val -> assertThat(val).isEqualTo("Success"),
+                        val -> assertThat(val).isEqualTo(7),
                         () -> fail("Should not be empty"),
                         err -> fail("Should not be error")
                 );
     }
+
 }

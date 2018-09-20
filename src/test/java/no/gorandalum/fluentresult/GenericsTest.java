@@ -39,7 +39,7 @@ public class GenericsTest {
     public void optionalResult_successToSuccess_map() {
         OptionalResult<Type, Type> result = OptionalResult.success(new SubType());
         Function<Optional<Type>, Optional<SubType>> function = p -> Optional.of(new SubType());
-        OptionalResult<Type, Type> mapped = result.map(function);
+        OptionalResult<Type, Type> mapped = result.mapToOptional(function);
     }
 
     private static class ParentType {}
