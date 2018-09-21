@@ -4,6 +4,12 @@
 
 A result library helping you get rid of exceptions, enabling a more fluent coding style.
 
+- [Motivation](#motivation)
+- [Usage](#usage)
+- [API](#api)
+  - [Result classes](#result-classes)
+  - [Instance methods](#instance-methods)
+
 ## Motivation
 
 Programming with exceptions can be both tedious and error-prone. Checked exceptions gives much boilerplate code, while unchecked exceptions can be the source of errors if they are let loose in the system without sufficient handling. 
