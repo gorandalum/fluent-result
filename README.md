@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/gorandalum/fluent-result.svg?branch=master)](https://travis-ci.com/gorandalum/fluent-result)
+
 # Fluent Result
 
 A result library helping you get rid of exceptions, enabling a more fluent coding style.
