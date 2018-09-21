@@ -8,7 +8,7 @@ A result library helping you get rid of exceptions, enabling a more fluent codin
 - [Usage](#usage)
 - [API](#api)
   - [Static Factory Methods](#static-factory-methods)
-    - [Result](#`result<t,-e>`)
+    - [Result](#resultt-e>)
   - [Instance Methods](#instance-methods)
 
 ## Motivation
