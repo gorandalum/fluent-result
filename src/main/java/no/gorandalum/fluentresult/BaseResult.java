@@ -1,5 +1,6 @@
 package no.gorandalum.fluentresult;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public abstract class BaseResult<T, E> {
@@ -32,6 +33,22 @@ public abstract class BaseResult<T, E> {
 
     public boolean isSuccess() {
         return error == null;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BaseResult)) return false;
+        BaseResult<?, ?> that = (BaseResult<?, ?>) o;
+        return Objects.equals(value, that.value) &&
+                Objects.equals(error, that.error) &&
+                Objects.equals(clazz, that.clazz);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, error, clazz);
     }
 
     @Override
