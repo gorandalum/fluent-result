@@ -6,9 +6,9 @@ A result library helping you get rid of exceptions, enabling a more fluent codin
 
 Programming with exceptions can be both tedious and error-prone. Checked exceptions gives much boilerplate code, while unchecked exceptions can be the source of errors if they are let loose in the system without sufficient handling. 
  
-Exceptions should not be used for control-flow, but in the heat of the moment it is often faster to just throw an IllegalArgumentException than encapsulating the error in the returned class. This result library has done the encapsulation of the error for you, making your control flow more fluent and exception-free.
+Also exceptions should not be used for control-flow, but in the heat of the moment it is often faster to just throw an IllegalArgumentException than encapsulating the error in the returned class. This result library has done the encapsulation of the error for you, making your control flow more fluent and exception-free.
 
-The introduction of Optional was a great step forward for Java, but as a class it does not make it any easier to return and handle error situations. The Result-class from this library is inspired from the Optional-class providing much of the same functionality, enabling utilization of chaining and lambdas for a more fluent style of programming.
+The introduction of Optional was a great step forward for Java, but as a class it does not make it any easier to return and handle error situations. The Result classes from this library is inspired from the Optional-class providing much of the same functionality, enabling utilization of chaining and lambdas for a more fluent style of programming.
  
 ## Usage
 
@@ -29,48 +29,38 @@ Now the code can be used like this:
 ```
 Result<Customer, String> customerResult = getCustomer(id);
 ```
-However the full benefit of using the result library is more visible when using chaining, and utilizing other methods that return Result values.
+However the full benefit of using the result library is more visible when using chaining and utilizing other methods that return Result values.
 
-
+Some other methods to use while chaining:
 ```
-
-public Result<Account, String> findAccount(Customer customer, String accountId) {
-... 
-}
-
-public void logAccountInfo(Account account) {
-    ...
-}
-
-public void logError(String customerId, String accountId, String errorMsg) {
-    ...
-}
-
+public Result<Account, String> findAccount(List<Account> accounts, String accountId)
+public void logAccountInfo(Account account)
+public void logError(String customerId, String accountId, String errorMsg)
 ```
 
 Now the above methods can be called by chaining the calls.
 
 ```
-public long getBalance(String customerId, String accountId) {
+public BigDecimal getBalance(String customerId, String accountId) {
     return getCustomer(customerId)
         .map(Customer::getAccounts)
-        .flatMap(customer -> findAccount(customer, accountId)
+        .flatMap(accounts -> findAccount(accounts, accountId)
         .consume(this::logAccountInfo)
         .map(Account::getBalance)
         .consumeError(errMsg -> logError(customerId, accountId, errMsg))
-        .orElse(0);
+        .orElse(BigDecimal.ZERO);
 }
 ```
 
-In the above chain the methods _map_, _flatMap_ and _consume_ is invoked only if there is an actual success value in the Result, and not if an error were returned somewhere in the chain. The method _consumeError_ is only invoked if an error is present.
+In the above chain the methods `map`, `flatMap` and `consume is invoked only if there is an actual success value in the Result, and not if an error were returned somewhere in the chain. The method `consumeError` is only invoked if an error is present.
 
+Fluent Result also provides Result classes for some other normal result types. This is the classes _OptionalResult_, _BooleanResult_ and _VoidResult_. These classes provide some additional methods relevant for their type, like `runIfEmpty` on OptionalResult and `runIfTrue` on BooleanResult. Or they remove some unnecessary methods like the `map`/`flatMap` methods on VoidResult.
 
-Fluent Result also provides Result-classes for some normal result types. This is the classes _OptionalResult_, _BooleanResult_ and _VoidResult_. 
-
+Example of a method returning an OptionalResult: 
 ```
 public OptionalResult<Movie, String> findMovie(String title) {
     try {
-        Movie movie = service.getMovie(title);
+        Movie movie = service.getMovie(title); // May be null
         return OptionalResult.successNullable(movie);
     } catch (RuntimeException ex) {
         return Result.error(ex.getMessage());
@@ -78,14 +68,35 @@ public OptionalResult<Movie, String> findMovie(String title) {
 }
 ```
 
-All result types have methods for mapping between to other result types.
+All Result classes have methods for mapping to the other Result classes.
+
+Example of mapping from a Result<Customer, String> to a BooleanResult<String> by using the method `mapToBoolean`:
 
 ```
 public BooleanResult<String> isUnderAge(String customerId) {
     return getCustomer(customerId)
-        .mapToBoolean(customer -> customer.age >= 18)
+        .mapToBoolean(customer -> customer.getAge() >= 18)
         .runIfFalse(() -> LOGGER.warn("Customer is underage"));
 }
+```
+
+The Result classes does not have methods like `get`, `isPresent` or `isSuccess`. We have seen these kind of methods misused on _Optional_, being the source of errors, or they may be used as an easy way out when the programmer don't want to program in a functional style.
+
+Example of code we do not want:
+```
+Result<Customer, String> customerResult = getCustomer(id);
+if (customerResult.isSuccess()) {
+    doSomethingWithCustomer(customerResult.get());
+} else {
+    logAnError(customerResult.getError());
+}
+```
+
+Instead it should be like this:
+```
+getCustomer(id).consumeEither(
+    this::doSomethingWithCustomer,
+    this::logAnError);
 ```
 
 ## API
@@ -94,9 +105,9 @@ public BooleanResult<String> isUnderAge(String customerId) {
  
 #### `Result<T, E>`
 
-The Result-class may either have a non-null success value or an non-null error value.
+The _Result_ class may either be in the success state with a non-null success value or be in the error state with a non-null error value.
 
-##### Static factory methods:
+##### Static factory methods
 
 ###### `success(T value)`
 
@@ -105,7 +116,7 @@ The Result-class may either have a non-null success value or an non-null error v
 - Returns
   - A new Result containing the success value
 
-####### `error(E error)`
+###### `error(E error)`
 
 - Argument(s)
   - The error value for the result. May not be null.
@@ -114,9 +125,9 @@ The Result-class may either have a non-null success value or an non-null error v
 
 #### `OptionalResult<T, E>`
 
-The OptionalResult-class may either have a non-null success value, be empty, or have an non-null error value.
+When the _OptionalResult_ class is in the success state it can either have a non-null success value, or be empty. If it is in the error state it has an non-null error value.
 
-##### Static factory methods:
+##### Static factory methods
 
 ###### `success(T value)`
 
@@ -143,7 +154,7 @@ The OptionalResult-class may either have a non-null success value, be empty, or 
 
 ###### `empty()`
 
-- No qrguments
+- No arguments
 - Returns
   - A new empty OptionalResult
 
@@ -156,9 +167,9 @@ The OptionalResult-class may either have a non-null success value, be empty, or 
 
 #### `BooleanResult<E>`
 
-The BooleanResult-class may either have a non-null boolean success value, or have an non-null error value.
+The BooleanResult class may either be in success state and have a non-null boolean success value, or be in error state and have a non-null error value.
 
-##### Static factory methods:
+##### Static factory methods
 
 ###### `success(boolean value)`
 
@@ -188,9 +199,9 @@ The BooleanResult-class may either have a non-null boolean success value, or hav
 
 #### `VoidResult<E>`
 
-The VoidResult-class may either be in success state without a value, or have an non-null error value.
+The VoidResult class may either be in success state without a value, or be in error state and have a non-null error value.
 
-##### Static factory methods:
+##### Static factory methods
 
 ###### `success()`
 
@@ -244,7 +255,7 @@ Maps the value of the result to another boolean value.
 
 #### FlatMap methods
 
-The flatMap methods maps the value of the result to a new Result-class instance. If the result already contained an error, the flatMap function is not run, and the new Result-class instance contains the original result error.
+The flatMap methods maps the value of the result to a new Result class instance. If the result already contained an error, the flatMap function is not run, and the new Result class instance contains the original result error.
 
 These methods are not present in VoidResult which does not contain a success value.
 
@@ -354,7 +365,7 @@ The runnable is run if the result is in the error state.
 
 ##### `runIfEither` 
 
-A method which accepts runnables for all the states of the Result-class.
+A method which accepts runnables for all the states of the Result class.
 
 - Argument(s)
   - A runnable which are run if the result is a success
@@ -367,7 +378,7 @@ A method which accepts runnables for all the states of the Result-class.
 
 ##### `run` 
 
-The runnable is run no matter what state the Result-class has.
+The runnable is run no matter what state the Result class has.
 
 - Argument(s)
   - A runnable which are always run, both in the case of success state or error state
@@ -376,7 +387,7 @@ The runnable is run no matter what state the Result-class has.
 
 ##### `verify` 
 
-A method which can verify the current success value of the Result-class. If the verification fails, the returned result will contain the supplied error value.
+A method which can verify the current success value of the Result class. If the verification fails, the returned result will contain the supplied error value.
 
 - Argument(s)
   - A predicate which tests the success value of the result
