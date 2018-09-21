@@ -1,7 +1,5 @@
 package no.gorandalum.fluentresult;
 
-import no.gorandalum.fluentresult.internal.Implementations;
-
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;

@@ -3,7 +3,7 @@ package no.gorandalum.fluentresult;
 import java.util.Objects;
 import java.util.Optional;
 
-public abstract class BaseResult<T, E> {
+abstract class BaseResult<T, E> {
 
     private final T value;
     private final E error;
@@ -15,26 +15,25 @@ public abstract class BaseResult<T, E> {
         this.clazz = clazz;
     }
 
-    public T value() {
+    T value() {
         return value;
     }
 
-    public Optional<T> valueOpt() {
+    Optional<T> valueOpt() {
         return Optional.ofNullable(value);
     }
 
-    public E error() {
+    E error() {
         return error;
     }
 
-    public Optional<E> errorOpt() {
+    Optional<E> errorOpt() {
         return Optional.ofNullable(error);
     }
 
-    public boolean isSuccess() {
+    boolean isSuccess() {
         return error == null;
     }
-
 
     @Override
     public boolean equals(Object o) {
