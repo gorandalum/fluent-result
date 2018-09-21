@@ -4,18 +4,6 @@
 
 A result library helping you get rid of exceptions, enabling a more fluent coding style.
 
-- [Motivation](#motivation)
-- [Usage](#usage)
-- [API](#api)
-  - [Static Factory Methods](#static-factory-methods)
-    - [`Result<T, E>`](#resultt-e)
-      - [`success`](#success)
-      - [`error`](#error)
-    - [OptionalResult](#optionalresultt-e)
-    - [BooleanResult](#booleanresulte)
-    - [VoidResult](#voidresulte)
-  - [Instance Methods](#instance-methods)
-
 ## Motivation
 
 Programming with exceptions can be both tedious and error-prone. Checked exceptions gives much boilerplate code, while unchecked exceptions can be the source of errors if they are let loose in the system without sufficient handling. 
@@ -116,6 +104,54 @@ getCustomer(id).consumeEither(
 ```
 
 ## API
+
+- [Static Factory Methods](#static-factory-methods)
+  - [`Result<T, E>`](#resultt-e)
+    - [`success(T value)`](#successt-value)
+    - [`error(E error)`](#errore-error)
+  - [`OptionalResult<T, E>`](#optionalresultt-e)
+      - [`success(T value)`](#successt-value-1)
+      - [`success(Optional<T> maybeValue)`](#successoptionalt-maybevalue)
+      - [`successNullable(T value)`](#successnullablet-value)
+      - [`empty()`](#empty)
+      - [`error`](#errore-error-1)
+  - [`BooleanResult<E>`](#booleanresulte)
+      - [`success(boolean value)`](#successboolean-value)
+      - [`successTrue()`](#successtrue)
+      - [`successFalse()`](#successfalse)
+      - [`error`](#errore-error-2)
+  - [`VoidResult<E>`](#voidresulte)
+      - [`success()`](#success)
+      - [`error`](#errore-error-3)
+- [Instance Methods](#instance-methods)
+  - [Map Methods](#map-methods)
+    - [`map`](#map)
+    - [`mapToOptional`](#maptooptional)
+    - [`mapToBoolean`](#maptoboolean)
+  - [FlatMap Methods](#map-methods)
+    - [`flatMap`](#flatMap)
+    - [`flatMapToOptionalResult`](#flatmaptooptionalresult)
+    - [`flatMapToBooleanResult`](#flatmaptobooleanresult)
+    - [`flatMapToVoidResult`](#flatmaptovoidresult)
+  - [Consume Methods](#consume-methods)
+    - [`consume`](#consume)
+    - [`consumeError`](#consumeerror)
+    - [`consumeEither`](#consumeither)
+  - [Run Methods](#run-methods)
+    - [`runIfSuccess`](#runifsuccess)
+    - [`runIfError`](#runiferror)
+    - [`runEither`](#runeither)
+  - [Verify Method](#verify-method)
+    - [`verify`](#verify)
+  - [Retrieve Value Methods](#retrieve-value-methods)
+    - [`merge`](#merge)
+    - [`orElse`](#orelse)
+    - [`orElseGet`](#orelseget)
+    - [`orElseThrow`](#orelsethrow)
+  - [Change Result Class Methods](#change-result-class-methods)
+    - [`toOptionalResult`](#tooptionalresult)
+    - [`toVoidResult`](#tovoidresult)
+    - [`toResult`](#toresult)
 
 ### Static Factory Methods
  
@@ -226,7 +262,7 @@ The _VoidResult_ class may either be in success state without a value, or be in 
 
 ### Instance methods
 
-#### Map methods
+#### Map Methods
 
 The `map` methods maps the value of the result to another value, resulting in a new result instance containing the new value. If the result already contained an error, no mapping takes place and the original result instance is returned unaltered.
 
@@ -264,7 +300,7 @@ Maps the value of the result to another boolean value.
   - A new `BooleanResult<E>`.
   - _VoidResult_ contains a variation of this method named `replaceWithBoolean` which takes a supplier providing the value the new _OptionalResult_ should contain.
 
-#### FlatMap methods
+#### FlatMap Methods
 
 The flatMap methods maps the value of the result to a new Result class instance. If the result already contained an error, the flatMap function is not run, and the new Result class instance contains the original result error.
 
@@ -352,7 +388,7 @@ Consumes both the success value and the error value of the result class.
   - _BooleanResult_ also contains a three argument version of this method where the first argument is a runnable to run when the success value is true, the second argument is a runnable to run if the success value is false and the third is a consumer accepting the error value.
   - _VoidResult_ contains a variation of this method where the first argument is a runnable to run if the _VoidResult_ is in success state and the second argument is a consumer accepting the error value.
   
-#### Run methods
+#### Run Methods
 
 The run methods are run if the prerequisite in the method name is met, and returns the result instance unaltered.
 
@@ -381,7 +417,7 @@ The runnable is run if the result is in the error state.
 - Returns
   - The original result unaltered.
 
-##### `runIfEither` 
+##### `runEither` 
 
 A method which accepts runnables for all the states of the Result class.
 
@@ -403,6 +439,8 @@ The runnable is run no matter what state the Result class has.
 - Returns
   - The original result unaltered.
 
+#### Verify method
+
 ##### `verify` 
 
 A method which can verify the current success value of the Result class. If the verification fails, the returned result will contain the supplied error value.
@@ -416,6 +454,8 @@ A method which can verify the current success value of the Result class. If the 
   - The original result unaltered if it already contained an error.
 - Notes
   - For _OptionalResult_ the predicate tests an Optional. Also provided in _OptionalResult_ are a method `verifyValue` which tests the actual value, and is not run if _OptionalResult_ is empty.
+
+#### Retrieve value methods
 
 ##### `merge` 
 
@@ -468,6 +508,8 @@ Returns the success value of the result, or throws the supplied exception from t
 - Notes
   - In _VoidResult_ this is a void-method.
   - _OptionalResult_ has a variation of this method `valueOrElseThrow` which throws the supplied exception if the _OptionalResult_ both is empty or contain an error.
+  
+#### Change Result Class Methods
 
 ##### `toOptionalResult`
 
