@@ -7,8 +7,9 @@ A result library helping you get rid of exceptions, enabling a more fluent codin
 - [Motivation](#motivation)
 - [Usage](#usage)
 - [API](#api)
-  - [Result classes](#result-classes)
-  - [Instance methods](#instance-methods)
+  - [Static Factory Methods](#static-factory-methods)
+    - [Result](#`result<t,-e>`)
+  - [Instance Methods](#instance-methods)
 
 ## Motivation
 
@@ -111,22 +112,20 @@ getCustomer(id).consumeEither(
 
 ## API
 
-### Result Classes
+### Static Factory Methods
  
 #### `Result<T, E>`
 
 The _Result_ class may either be in the success state with a non-null success value or be in the error state with a non-null error value.
 
-##### Static factory methods
-
-###### `success(T value)`
+##### `success(T value)`
 
 - Argument(s)
   - The success value for the result. May not be null.
 - Returns
   - A _Result_ containing the success value.
 
-###### `error(E error)`
+##### `error(E error)`
 
 - Argument(s)
   - The error value for the result. May not be null.
@@ -137,16 +136,14 @@ The _Result_ class may either be in the success state with a non-null success va
 
 When the _OptionalResult_ class is in the success state it can either have a non-null success value, or be empty. If it is in the error state it has an non-null error value.
 
-##### Static factory methods
-
-###### `success(T value)`
+##### `success(T value)`
 
 - Argument(s)
   - The success value for the result. May not be null.
 - Returns
   - An _OptionalResult_ containing the success value.
 
-###### `success(Optional<T> maybeValue)`
+##### `success(Optional<T> maybeValue)`
 
 - Argument(s)
   - The optional success value for the result. The optional itself should not be null.
@@ -154,7 +151,7 @@ When the _OptionalResult_ class is in the success state it can either have a non
   - A _OptionalResult_ containing the success value if present in the _Optional_.
   - An empty _OptionalResult_ if the provided _Optional_ is empty.
 
-###### `successNullable(T value)`
+##### `successNullable(T value)`
 
 - Argument(s)
   - The success value for the result. May be null.
@@ -162,13 +159,13 @@ When the _OptionalResult_ class is in the success state it can either have a non
   - A _OptionalResult_ containing the success value if not null.
   - An empty _OptionalResult_ if the value is null.
 
-###### `empty()`
+##### `empty()`
 
 - No arguments
 - Returns
   - An empty _OptionalResult_.
 
-###### `error(E error)`
+##### `error(E error)`
 
 - Argument(s)
   - The error value for the result. May not be null.
@@ -179,28 +176,26 @@ When the _OptionalResult_ class is in the success state it can either have a non
 
 The _BooleanResult_ class may either be in success state and have a non-null boolean success value, or be in error state and have a non-null error value.
 
-##### Static factory methods
-
-###### `success(boolean value)`
+##### `success(boolean value)`
 
 - Argument(s)
   - The success boolean value for the result. May not be null.
 - Returns
   - A _BooleanResult_ containing the success value.
 
-###### `successTrue()`
+##### `successTrue()`
 
 - No arguments
 - Returns
   - A _BooleanResult_ containing true as the success value.
 
-###### `successFalse()`
+##### `successFalse()`
 
 - No arguments
 - Returns
   - A _BooleanResult_ containing false as the success value.
 
-###### `error(E error)`
+##### `error(E error)`
 
 - Argument(s)
   - The error value for the result. May not be null.
@@ -211,15 +206,13 @@ The _BooleanResult_ class may either be in success state and have a non-null boo
 
 The _VoidResult_ class may either be in success state without a value, or be in error state and have a non-null error value.
 
-##### Static factory methods
-
-###### `success()`
+##### `success()`
 
 - No arguments
 - Returns
   - A _VoidResult_ in success state.
 
-###### `error(E error)`
+##### `error(E error)`
 
 - Argument(s)
   - The error value for the result. May not be null.
