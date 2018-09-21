@@ -62,6 +62,15 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
                 this);
     }
 
+    public <N> OptionalResult<N, E> mapValueToOptional(
+            Function<? super T, Optional<? extends N>> function) {
+        return Implementations.map(
+                maybeVal -> maybeVal.flatMap(function),
+                OptionalResult::success,
+                OptionalResult::error,
+                this);
+    }
+
     public <N> OptionalResult<N, E> flatMapToOptionalResult(
             Function<Optional<T>, OptionalResult<? extends N, ? extends E>> function) {
         return (OptionalResult<N, E>)Implementations.flatMap(function, this);
@@ -80,15 +89,6 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     public VoidResult<E> flatMapToVoidResult(
             Function<Optional<? extends T>, VoidResult<? extends E>> function) {
         return (VoidResult<E>)Implementations.flatMap(function, this, VoidResult::error);
-    }
-
-    public <N> OptionalResult<N, E> flatMapValue(
-            Function<? super T, Optional<? extends N>> function) {
-        return Implementations.map(
-                maybeVal -> maybeVal.flatMap(function),
-                OptionalResult::success,
-                OptionalResult::error,
-                this);
     }
 
     public <N> OptionalResult<N, E> flatMapValueWithOptionalResult(

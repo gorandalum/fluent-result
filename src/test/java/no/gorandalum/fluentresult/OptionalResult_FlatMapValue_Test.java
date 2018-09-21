@@ -6,13 +6,13 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-class OptionalResult_FlatMapValue_Test {
+class OptionalResult_MapValueToOptional_Test {
 
     @Test
-    void flatMapValue_success_successfullyMapValue() {
+    void mapValueToOptional_success_successfullyMapValue() {
         OptionalResult<Integer, String> result =
                 OptionalResult.<String, String>success("Success")
-                        .flatMapValue(val -> Optional.of(val.length()));
+                        .mapValueToOptional(val -> Optional.of(val.length()));
         result.consumeEither(
                 val -> assertThat(val).isEqualTo(7),
                 () -> fail("Should not be empty"),
@@ -20,10 +20,10 @@ class OptionalResult_FlatMapValue_Test {
     }
 
     @Test
-    void flatMapValue_success_mapToEmptyOptionalGivesEmpty() {
+    void mapValueToOptional_success_mapToEmptyOptionalGivesEmpty() {
         OptionalResult<String, String> result =
                 OptionalResult.<String, String>success("Success")
-                        .flatMapValue(val -> Optional.empty());
+                        .mapValueToOptional(val -> Optional.empty());
         result.consumeEither(
                 val -> fail("Should not have value"),
                 () -> {},
@@ -31,10 +31,10 @@ class OptionalResult_FlatMapValue_Test {
     }
 
     @Test
-    void flatMapValue_empty_shouldRemainEmpty() {
+    void mapValueToOptional_empty_shouldRemainEmpty() {
         OptionalResult<Integer, String> result =
                 OptionalResult.<String, String>empty()
-                        .flatMapValue(val -> Optional.of(val.length()));
+                        .mapValueToOptional(val -> Optional.of(val.length()));
         result.consumeEither(
                 val -> fail("Should not have value"),
                 () -> {},
@@ -42,10 +42,10 @@ class OptionalResult_FlatMapValue_Test {
     }
 
     @Test
-    void flatMapValue_error_shouldKeepOriginalError() {
+    void mapValueToOptional_error_shouldKeepOriginalError() {
         OptionalResult<Integer, String> result =
                 OptionalResult.<String, String>error("OriginalError")
-                        .flatMapValue(val -> Optional.of(val.length()));
+                        .mapValueToOptional(val -> Optional.of(val.length()));
         result.consumeEither(
                 val -> fail("Should not have value"),
                 () -> fail("Should not be empty"),
@@ -53,32 +53,32 @@ class OptionalResult_FlatMapValue_Test {
     }
 
     @Test
-    void flatMapValue_empty_shouldNotRunFunctionWhenEmpty() {
-        OptionalResult.empty().flatMapValue(
+    void mapValueToOptional_empty_shouldNotRunFunctionWhenEmpty() {
+        OptionalResult.empty().mapValueToOptional(
                 val -> {
                     throw new RuntimeException();
                 });
     }
 
     @Test
-    void flatMapValue_error_shouldNotRunFunctionWhenError() {
-        OptionalResult.error("OriginalError").flatMapValue(
+    void mapValueToOptional_error_shouldNotRunFunctionWhenError() {
+        OptionalResult.error("OriginalError").mapValueToOptional(
                 val -> {
                     throw new RuntimeException();
                 });
     }
 
     @Test
-    void flatMapValue_success_nullFunctionGivesNPE() {
+    void mapValueToOptional_success_nullFunctionGivesNPE() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
-        assertThatThrownBy(() -> result.flatMapValue(null))
+        assertThatThrownBy(() -> result.mapValueToOptional(null))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    void flatMapValue_success_nullReturnFromFunctionGivesNPE() {
+    void mapValueToOptional_success_nullReturnFromFunctionGivesNPE() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
-        assertThatThrownBy(() -> result.flatMapValue(val -> null))
+        assertThatThrownBy(() -> result.mapValueToOptional(val -> null))
                 .isInstanceOf(NullPointerException.class);
     }
 }
