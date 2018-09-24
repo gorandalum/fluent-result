@@ -31,8 +31,9 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * @param value the success value, which must be non-{@code null}
      * @param <T> the type of the success value
      * @param <E> the type of the error value
-     * @return a {@code Result} containing the given success value
-     * @throws NullPointerException if value is {@code null}
+     * @return a {@code Result} in success state containing the given success
+     * value
+     * @throws NullPointerException if given success value is {@code null}
      */
     public static <T, E> Result<T, E> success(T value) {
         return new Result<>(Objects.requireNonNull(value), null);
@@ -42,14 +43,14 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * Returns a {@code Result} in error state containing the given
      * non-{@code null} value as error value.
      *
-     * @param error the error value, which must be non-{@code null}
+     * @param value the error value, which must be non-{@code null}
      * @param <T> the type of the success value
      * @param <E> the type of the error value
-     * @return a {@code Result} containing the given error value
-     * @throws NullPointerException if error value is {@code null}
+     * @return a {@code Result} in error state containing the given error value
+     * @throws NullPointerException if given error value is {@code null}
      */
-    public static <T, E> Result<T, E> error(E error) {
-        return new Result<>(null, Objects.requireNonNull(error));
+    public static <T, E> Result<T, E> error(E value) {
+        return new Result<>(null, Objects.requireNonNull(value));
     }
 
     /**
@@ -59,7 +60,7 @@ public final class Result<T, E> extends BaseResult<T, E> {
      *
      * @param function the mapping function to apply to the success value, if
      * success state
-     * @param <N> The type of the value returned from the mapping function
+     * @param <N> the type of the value returned from the mapping function
      * @return a {@code Result} containing the result of applying the mapping
      * function to the success value of this {@code Result}, if in success
      * state, otherwise the unaltered {@code Result} in error state
@@ -78,7 +79,7 @@ public final class Result<T, E> extends BaseResult<T, E> {
      *
      * @param function the mapping function to apply to the success value, if
      * success state
-     * @param <N> The type of the success value which may be present in the
+     * @param <N> the type of the success value which may be present in the
      * {@code Optional} returned from the mapping function
      * @return a {@code OptionalResult} containing the result of applying the
      * mapping function to the success value of this {@code Result}, if in
@@ -119,11 +120,29 @@ public final class Result<T, E> extends BaseResult<T, E> {
     }
 
     /**
+     * If in error state, returns a {@code Result} containing the result of
+     * applying the given mapping function to the error value, otherwise
+     * returns the unaltered {@code Result} in success state.
+     *
+     * @param function the mapping function to apply to the error value, if
+     * error state
+     * @param <N> the type of the value returned from the mapping function
+     * @return a {@code Result} containing the result of applying the mapping
+     * function to the error value of this {@code Result}, if in error
+     * state, otherwise the unaltered {@code Result} in success state
+     * @throws NullPointerException if the given mapping function is
+     * {@code null} or returns {@code null}
+     */
+    public <N> Result<T, N> mapError(Function<? super E, ? extends N> function) {
+        return Implementations.mapError(function, Result::error, this);
+    }
+
+    /**
      * If in success state, returns the {@code Result} from applying the given
      * mapping function to the success value, otherwise returns the unaltered
      * {@code Result} in error state.
      *
-     * @param <N> The type of success value which may be present in the
+     * @param <N> the type of success value which may be present in the
      * {@code Result} returned by the mapping function
      * @param function the mapping function to apply to the success value, if
      * success state
@@ -141,7 +160,7 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * the given mapping function to the success value, otherwise returns a
      * {@code OptionalResult} containing the error value of this {@code Result}.
      *
-     * @param <N> The type of success value which may be present in the
+     * @param <N> the type of success value which may be present in the
      * {@code OptionalResult} returned by the mapping function
      * @param function the mapping function to apply to the success value, if
      * success state
@@ -196,7 +215,7 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * If in success state, applies the success value to the given consumer,
      * otherwise does nothing.
      *
-     * @param consumer the consumer which accepts the current success value
+     * @param consumer the consumer which accepts the success value
      * @return the original {@code Result} unaltered
      * @throws NullPointerException if the given consumer is {@code null}
      */
@@ -208,7 +227,7 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * If in error state, applies the error value to the given consumer,
      * otherwise does nothing.
      *
-     * @param errorConsumer the consumer which accepts the current error value
+     * @param errorConsumer the consumer which accepts the error value
      * @return the original {@code Result} unaltered
      * @throws NullPointerException if the given consumer is {@code null}
      */
@@ -221,8 +240,8 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * consumer. If in error state, applies the error value to the given error
      * consumer.
      *
-     * @param valueConsumer the consumer which accepts the current success value
-     * @param errorConsumer the consumer which accepts the current error value
+     * @param valueConsumer the consumer which accepts the success value
+     * @param errorConsumer the consumer which accepts the error value
      * @return the original {@code Result} unaltered
      * @throws NullPointerException if one of the given consumers is {@code null}
      */
@@ -280,18 +299,19 @@ public final class Result<T, E> extends BaseResult<T, E> {
     /**
      * If in success state, verifies the success value of this {@code Result} by
      * testing it with the given predicate. If the predicate evaluates to false,
-     * a new {@code Result} is returned containing error value provided by the
-     * given error supplier. If the predicate evaluates to true, or the
+     * a new {@code Result} is returned containing the error value provided by
+     * the given error supplier. If the predicate evaluates to true, or the
      * {@code Result} already was in error state, the original {@code Result} is
      * returned unaltered.
      *
-     * @param predicate the predicate used to verify the current success value,
-     * if success state
+     * @param predicate the predicate used to verify the success value, if
+     * success state
      * @return the original {@code Result} unaltered, unless the predicate
-     * evalutates to false, then a new {@code Result} in error state is returned
+     * evaluates to false, then a new {@code Result} in error state is returned
      * containing the supplied error value
      * @throws NullPointerException if the given predicate is {@code null} or
-     * the given error supplier is null
+     * returns {@code null}, or the given error supplier is {@code null} or
+     * returns {@code null}
      */
     public Result<T, E> verify(Predicate<? super T> predicate,
                                Supplier<? extends E> errorSupplier) {
@@ -299,21 +319,20 @@ public final class Result<T, E> extends BaseResult<T, E> {
     }
 
     /**
-     * Retrieve a value from the {@code Result} by merging the current states.
-     * If in success state, return the value of applying the value function to
-     * the success value. If in error state, return the value of applying the
-     * error function to the error value.
+     * Retrieve a value from this {@code Result} by merging the states. If in
+     * success state, return the value of applying the value function to the
+     * success value. If in error state, return the value of applying the error
+     * function to the error value.
      *
-     * @param <N> The type of retrieved value
+     * @param <N> the type of retrieved value
      * @param valueFunction the mapping function to apply to the success value,
-     * if success state
+     * if success state, may return {@code null}
      * @param errorFunction the mapping function to apply to the error value, if
-     * error state
-     * @return the original {@code Result} unaltered, unless the predicate
-     * evalutates to false, then a new {@code Result} in error state is returned
-     * containing the supplied error value
-     * @throws NullPointerException if the given predicate is {@code null} or
-     * the given error supplier is null
+     * error state, may return {@code null}
+     * @return the merged value mapped from either the success value or error
+     * value, may be {@code null}
+     * @throws NullPointerException if one of the given functions is
+     * {@code null}
      */
     public <N> N merge(Function<? super T, ? extends N> valueFunction,
                        Function<? super E, ? extends N> errorFunction) {
@@ -337,7 +356,7 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * value returned from the given function.
      *
      * @param function the mapping function to apply to the error value, if not
-     * in success state
+     * in success state, it may return {@code null}
      * @return the success value, if success state, otherwise the result
      * returned from the given function
      * @throws NullPointerException if the given function is {@code null}
@@ -355,7 +374,8 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * the error value, if not in success state
      * @return the success value, if success state
      * @throws X if in error state
-     * @throws NullPointerException if the given function is {@code null}
+     * @throws NullPointerException if the given function is {@code null} or
+     * returns {@code null}
      */
     public <X extends Throwable> T orElseThrow(
             Function<? super E, ? extends X> function) throws X {
@@ -363,8 +383,8 @@ public final class Result<T, E> extends BaseResult<T, E> {
     }
 
     /**
-     * Transforms the current {@code Result} to an {@code OptionalResult}. If
-     * in success state, the {@code OptionalResult} will be in success state
+     * Transforms this {@code Result} to an {@code OptionalResult}. If in
+     * success state, the {@code OptionalResult} will be in success state
      * containing the success value from this {@code Result}. If in error state,
      * the {@code OptionalResult} will be in error state containing the error
      * value from this {@code Result}.
@@ -382,9 +402,9 @@ public final class Result<T, E> extends BaseResult<T, E> {
     }
 
     /**
-     * Transforms the current {@code Result} to a {@code VoidResult}. If in
-     * success state, the {@code VoidResult} will be in success state. If in
-     * error state, the {@code VoidResult} will be in error state containing the
+     * Transforms this {@code Result} to a {@code VoidResult}. If in success
+     * state, the {@code VoidResult} will be in success state. If in error
+     * state, the {@code VoidResult} will be in error state containing the
      * error value from this {@code Result}.
      *
      * @return a {@code VoidResult} either in success state or in error state

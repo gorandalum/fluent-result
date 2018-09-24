@@ -10,7 +10,7 @@ class BooleanResult_FlatMapToBooleanResult_Test {
     @Test
     void flatMapToBooleanResult_success_shouldFlatMapValue() {
         BooleanResult.success(true)
-                .flatMapToBoolean(val -> BooleanResult.success(!val))
+                .flatMapToBooleanResult(val -> BooleanResult.success(!val))
                 .consumeEither(
                         () -> fail("Should not be empty"),
                         () -> {},

@@ -103,15 +103,15 @@ final class Implementations {
         return instance;
     }
 
-    static <T, E, R extends BaseResult<T, E>> R verify(Predicate<? super T> verificator,
+    static <T, E, R extends BaseResult<T, E>> R verify(Predicate<? super T> predicate,
                                                        Supplier<? extends E> errorSupplier,
                                                        Function<E, R> errorConstructor,
                                                        R instance) {
-        Objects.requireNonNull(verificator);
+        Objects.requireNonNull(predicate);
         Objects.requireNonNull(errorSupplier);
         return instance.errorOpt()
                 .map(err -> instance)
-                .orElseGet(() -> verificator.test(instance.value()) ?
+                .orElseGet(() -> predicate.test(instance.value()) ?
                         instance : errorConstructor.apply(errorSupplier.get()));
     }
 
@@ -124,6 +124,16 @@ final class Implementations {
         return instance.isSuccess() ?
                 successConstructor.apply(function.apply(instance.value())) :
                 errorConstructor.apply(instance.error());
+    }
+
+    static <T, E, N, NR, R extends BaseResult<T, E>> NR mapError(
+            Function<? super E, ? extends N> function,
+            Function<? super N, NR> errorConstructor,
+            R instance) {
+        Objects.requireNonNull(function);
+        return instance.isSuccess() ?
+                (NR)instance :
+                errorConstructor.apply(function.apply(instance.error()));
     }
 
     static <T, E, N, NR extends BaseResult<? extends N, ? extends E>, R extends BaseResult<T, E>> NR flatMap(
