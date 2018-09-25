@@ -322,32 +322,6 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
-     * If in success state with a success value, returns the
-     * {@code OptionalResult} from applying the given mapping function to the
-     * success value, otherwise returns the unaltered {@code OptionalResult}
-     * which may be empty or in error state.
-     *
-     * @param <N> the type of success value which may be present in the
-     * {@code OptionalResult} returned by the mapping function
-     * @param function the mapping function to apply to the success value, if
-     * success state with a success value
-     * @return the {@code OptionalResult} returned from the mapping function, if
-     * in success state with a success value, otherwise the unaltered
-     * {@code OptionalResult} which may be empty or in error state
-     * @throws NullPointerException if the given mapping function is
-     * {@code null} or returns {@code null}
-     */
-    public <N> OptionalResult<N, E> flatMapValueWithOptionalResult(
-            Function<? super T, OptionalResult<? extends N, ? extends E>> function) {
-        return (OptionalResult<N, E>) Implementations.flatMap(
-                maybeVal -> maybeVal
-                        .map(val -> Objects.requireNonNull(function.apply(val)))
-                        .orElseGet(OptionalResult::empty),
-                this
-        );
-    }
-
-    /**
      * If in success state with a success value, returns an
      * {@code OptionalResult} from applying the given mapping function to the
      * success value, otherwise returns the unaltered {@code OptionalResult}
@@ -377,6 +351,32 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
                         .map(Result::toOptionalResult)
                         .orElseGet(OptionalResult::empty),
                 this);
+    }
+
+    /**
+     * If in success state with a success value, returns the
+     * {@code OptionalResult} from applying the given mapping function to the
+     * success value, otherwise returns the unaltered {@code OptionalResult}
+     * which may be empty or in error state.
+     *
+     * @param <N> the type of success value which may be present in the
+     * {@code OptionalResult} returned by the mapping function
+     * @param function the mapping function to apply to the success value, if
+     * success state with a success value
+     * @return the {@code OptionalResult} returned from the mapping function, if
+     * in success state with a success value, otherwise the unaltered
+     * {@code OptionalResult} which may be empty or in error state
+     * @throws NullPointerException if the given mapping function is
+     * {@code null} or returns {@code null}
+     */
+    public <N> OptionalResult<N, E> flatMapValueWithOptionalResult(
+            Function<? super T, OptionalResult<? extends N, ? extends E>> function) {
+        return (OptionalResult<N, E>) Implementations.flatMap(
+                maybeVal -> maybeVal
+                        .map(val -> Objects.requireNonNull(function.apply(val)))
+                        .orElseGet(OptionalResult::empty),
+                this
+        );
     }
 
     /**
@@ -798,21 +798,6 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
-     * Transforms this {@code OptionalResult} to a {@code VoidResult}. If in
-     * success state, the {@code VoidResult} will be in success state. If in
-     * error state, the {@code VoidResult} will be in error state containing the
-     * error value from this {@code OptionalResult}.
-     *
-     * @return a {@code VoidResult} either in success state or in error state
-     * containing the error value from this {@code OptionalResult}
-     */
-    public VoidResult<E> toVoidResult() {
-        return errorOpt()
-                .map(VoidResult::error)
-                .orElseGet(VoidResult::success);
-    }
-
-    /**
      * Flattens this {@code OptionalResult} to a {@code Result}. If this
      * {@code OptionalResult} is empty, then the returned {@code Result} will be
      * in error state, containing the error value supplied by the given error
@@ -830,6 +815,21 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     public Result<T, E> flatten(Supplier<? extends E> errorSupplier) {
         Objects.requireNonNull(errorSupplier);
         return merge(Result::success, () -> Result.error(errorSupplier.get()), Result::error);
+    }
+
+    /**
+     * Transforms this {@code OptionalResult} to a {@code VoidResult}. If in
+     * success state, the {@code VoidResult} will be in success state. If in
+     * error state, the {@code VoidResult} will be in error state containing the
+     * error value from this {@code OptionalResult}.
+     *
+     * @return a {@code VoidResult} either in success state or in error state
+     * containing the error value from this {@code OptionalResult}
+     */
+    public VoidResult<E> toVoidResult() {
+        return errorOpt()
+                .map(VoidResult::error)
+                .orElseGet(VoidResult::success);
     }
 }
 

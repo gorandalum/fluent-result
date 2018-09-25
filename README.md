@@ -104,448 +104,100 @@ getCustomer(id).consumeEither(
 ```
 
 ## API
-
-- [Static Factory Methods](#static-factory-methods)
-  - [`Result<T, E>`](#resultt-e)
-    - [`success(T value)`](#successt-value)
-    - [`error(E error)`](#errore-error)
-  - [`OptionalResult<T, E>`](#optionalresultt-e)
-      - [`success(T value)`](#successt-value-1)
-      - [`success(Optional<T> maybeValue)`](#successoptionalt-maybevalue)
-      - [`successNullable(T value)`](#successnullablet-value)
-      - [`empty()`](#empty)
-      - [`error`](#errore-error-1)
-  - [`BooleanResult<E>`](#booleanresulte)
-      - [`success(boolean value)`](#successboolean-value)
-      - [`successTrue()`](#successtrue)
-      - [`successFalse()`](#successfalse)
-      - [`error`](#errore-error-2)
-  - [`VoidResult<E>`](#voidresulte)
-      - [`success()`](#success)
-      - [`error`](#errore-error-3)
-- [Instance Methods](#instance-methods)
-  - [Map Methods](#map-methods)
-    - [`map`](#map)
-    - [`mapToOptional`](#maptooptional)
-    - [`mapToBoolean`](#maptoboolean)
-  - [FlatMap Methods](#flatmap-methods)
-    - [`flatMap`](#flatmap)
-    - [`flatMapToOptionalResult`](#flatmaptooptionalresult)
-    - [`flatMapToBooleanResult`](#flatmaptobooleanresult)
-    - [`flatMapToVoidResult`](#flatmaptovoidresult)
-  - [Consume Methods](#consume-methods)
-    - [`consume`](#consume)
-    - [`consumeError`](#consumeerror)
-    - [`consumeEither`](#consumeeither)
-  - [Run Methods](#run-methods)
-    - [`runIfSuccess`](#runifsuccess)
-    - [`runIfError`](#runiferror)
-    - [`runEither`](#runeither)
-    - [`run`](#run)
-  - [Verify Method](#verify-method)
-    - [`verify`](#verify)
-  - [Retrieve Value Methods](#retrieve-value-methods)
-    - [`merge`](#merge)
-    - [`orElse`](#orelse)
-    - [`orElseGet`](#orelseget)
-    - [`orElseThrow`](#orelsethrow)
-  - [Change Result Class Methods](#change-result-class-methods)
-    - [`toOptionalResult`](#tooptionalresult)
-    - [`toVoidResult`](#tovoidresult)
-    - [`toResult`](#toresult)
-
-### Static Factory Methods
- 
-#### `Result<T, E>`
-
-The _Result_ class may either be in the success state with a non-null success value or be in the error state with a non-null error value.
-
-##### `success(T value)`
-
-- Argument(s)
-  - The success value for the result. May not be null.
-- Returns
-  - A _Result_ containing the success value.
-
-##### `error(E error)`
-
-- Argument(s)
-  - The error value for the result. May not be null.
-- Returns
-  - A _Result_ containing the error value.
-
-#### `OptionalResult<T, E>`
-
-When the _OptionalResult_ class is in the success state it can either have a non-null success value, or be empty. If it is in the error state it has an non-null error value.
-
-##### `success(T value)`
-
-- Argument(s)
-  - The success value for the result. May not be null.
-- Returns
-  - An _OptionalResult_ containing the success value.
-
-##### `success(Optional<T> maybeValue)`
-
-- Argument(s)
-  - The optional success value for the result. The optional itself should not be null.
-- Returns
-  - A _OptionalResult_ containing the success value if present in the _Optional_.
-  - An empty _OptionalResult_ if the provided _Optional_ is empty.
-
-##### `successNullable(T value)`
-
-- Argument(s)
-  - The success value for the result. May be null.
-- Returns
-  - A _OptionalResult_ containing the success value if not null.
-  - An empty _OptionalResult_ if the value is null.
-
-##### `empty()`
-
-- No arguments
-- Returns
-  - An empty _OptionalResult_.
-
-##### `error(E error)`
-
-- Argument(s)
-  - The error value for the result. May not be null.
-- Returns
-  - An _OptionalResult_ containing the error value.
-
-#### `BooleanResult<E>`
-
-The _BooleanResult_ class may either be in success state and have a non-null boolean success value, or be in error state and have a non-null error value.
-
-##### `success(boolean value)`
-
-- Argument(s)
-  - The success boolean value for the result. May not be null.
-- Returns
-  - A _BooleanResult_ containing the success value.
-
-##### `successTrue()`
-
-- No arguments
-- Returns
-  - A _BooleanResult_ containing true as the success value.
-
-##### `successFalse()`
-
-- No arguments
-- Returns
-  - A _BooleanResult_ containing false as the success value.
-
-##### `error(E error)`
-
-- Argument(s)
-  - The error value for the result. May not be null.
-- Returns
-  - A _BooleanResult_ containing the error value.
-
-#### `VoidResult<E>`
-
-The _VoidResult_ class may either be in success state without a value, or be in error state and have a non-null error value.
-
-##### `success()`
-
-- No arguments
-- Returns
-  - A _VoidResult_ in success state.
-
-##### `error(E error)`
-
-- Argument(s)
-  - The error value for the result. May not be null.
-- Returns
-  - A _VoidResult_ containing the error value.
-
-### Instance methods
-
-#### Map Methods
-
-The `map` methods maps the value of the result to another value, resulting in a new result instance containing the new value. If the result already contained an error, no mapping takes place and the original result instance is returned unaltered.
-
-These methods are not present in _VoidResult_ which does not contain a success value, they are instead replaced with `replace` methods taking suppliers as arguments in stead of functions.
-
-##### `map`
-
-Maps the value of the result to another value.
-
-- Argument(s)
-  - A function mapping from `T` to `N`.
-- Returns
-  - A new `Result<N, E>`.
-- Notes 
-  - _VoidResult_ contains a variation of this method named `replace` which takes a supplier providing the value the new _Result_ should contain.
-  - _OptionalResult_ also contains two variations of this method named `mapValue` and `mapValueToOptional` which maps the _OptionalResult_ success value.
-  
-##### `mapToOptional`
-
-Maps the value of the result to another optional value.
-
-- Argument(s)
-  - A function mapping from `T` to `Optional<N>`.
-- Returns
-  - A new `OptionalResult<N, E>`.
-  - _VoidResult_ contains a variation of this method named `replaceWithOptional` which takes a supplier providing the value the new _OptionalResult_ should contain.
-  
-##### `mapToBoolean` 
-
-Maps the value of the result to another boolean value.
-
-- Argument(s)
-  - A function mapping from `T` to `Boolean`.
-- Returns
-  - A new `BooleanResult<E>`.
-  - _VoidResult_ contains a variation of this method named `replaceWithBoolean` which takes a supplier providing the value the new _OptionalResult_ should contain.
-
-#### FlatMap Methods
-
-The flatMap methods maps the value of the result to a new Result class instance. If the result already contained an error, the flatMap function is not run, and the new Result class instance contains the original result error.
-
-These methods are not present in _VoidResult_ which does not contain a success value, they are instead replaced with `flatReplace` methods taking suppliers as arguments in stead of functions.
-
-##### `flatMap` 
-
-Maps the value of the result to a new _Result_.
-
-- Argument(s)
-  - A function mapping from `T` to `Result<N, E>`.
-- Returns
-  - A new `Result<N, E>`.
-  - _VoidResult_ contains a variation of this method named `flatReplace` which takes a supplier providing a _Result_.
-  - _OptionalResult_ also contains a variation of this method named `flatMapValueWithResult` which maps the _OptionalResult_ success value. The returned result is still an _OptionalResult_ since an empty value is left unaltered.
-
-##### `flatMapToOptionalResult` 
-
-Maps the value of the result to a new _OptionalResult_.
-
-- Argument(s)
-  - A function mapping from `T` to `OptionalResult<N, E>`.
-- Returns
-  - A new `OptionalResult<N, E>`.
-  - _VoidResult_ contains a variation of this method named `flatReplaceToOptionalResult` which takes a supplier providing a _OptionalResult_.
-  - _OptionalResult_ also contains a variation of this method named `flatMapValueWithOptionalResult` which maps the _OptionalResult_ success value. The returned result is still an _OptionalResult_ since an empty value is left unaltered.
-
-##### `flatMapToBooleanResult` 
-
-Maps the value of the result to a new _BooleanResult_.
-
-- Argument(s)
-  - A function mapping from `T` to `BooleanResult<E>`.
-- Returns
-  - A new `BooleanResult<E>`.
-  - _VoidResult_ contains a variation of this method named `flatReplaceToBooleanResult` which takes a supplier providing a _BooleanResult_.
-  - _OptionalResult_ also contains a variation of this method named `flatMapValueWithBooleanResult` which maps the _OptionalResult_ success value. The returned result is still an _OptionalResult_ since an empty value is left unaltered.
-
-##### `flatMapToVoidResult`
-
-Maps the value of the result to a new _VoidResult_.
-
-- Argument(s)
-  - A function mapping from `T` to `VoidResult<E>`.
-- Returns
-  - A new `VoidResult<E>`.
-  - _VoidResult_ contains a variation of this method named `flatReplaceToVoidResult` which takes a supplier providing a _VoidResult_.
-
-#### Consume Methods
-
-The consume methods uses the values contained values in the result instance, and returns the result instance unaltered.
-
-##### `consume` 
-
-Consumes the success value of the result class. This method is not present in _VoidResult_.
-
-- Argument(s)
-  - A consumer accepting the success value of the result.
-- Returns
-  - The original result unaltered.
-- Notes 
-  - Not present in _VoidResult_.
-  - For _OptionalResult_ this method consumes an _Optional_. Also provided in _OptionalResult_ are a method `consumeValue` which consumes the actual value, and is not run if _OptionalResult_ is empty.
-
-##### `consumeError` 
-
-Consumes the error value of the result class.
-
-- Argument(s)
-  - A consumer accepting the error value of the result.
-- Returns
-  - The original result unaltered.
-
-##### `consumeEither` 
-
-Consumes both the success value and the error value of the result class.
-
-- Argument(s)
-  - A consumer accepting the success value of the result.
-  - A consumer accepting the error value of the result.
-- Returns
-  - The original result unaltered.
-- Notes 
-  - _OptionalResult_ also contains a three argument version of this method where the first argument is a consumer accepting the success value, the second argument is a runnable to run if the _OptionalResult_ is empty and the third is a consumer accepting the error value.
-  - _BooleanResult_ also contains a three argument version of this method where the first argument is a runnable to run when the success value is true, the second argument is a runnable to run if the success value is false and the third is a consumer accepting the error value.
-  - _VoidResult_ contains a variation of this method where the first argument is a runnable to run if the _VoidResult_ is in success state and the second argument is a consumer accepting the error value.
-  
-#### Run Methods
-
-The run methods are run if the prerequisite in the method name is met, and returns the result instance unaltered.
-
-##### `runIfSuccess` 
-
-The runnable is run if the result is in the success state.
-
-- Argument(s)
-  - A runnable which are run if the result is a success.
-- Returns
-  - The original result unaltered.
-- Notes
-  - For _OptionalResult_ this method is run both when it has a success value and when it is empty, as both translates to a success state. 
-  - Also provided in _OptionalResult_ are a method runIfValue which is only run when there is an actual success value.
-  - Also provided in _OptionalResult_ are a method runIfEmpty which is only run if the _OptionalResult_ is empty.
-  - For _BooleanResult_ this method is run when the success value is both true or false, as both translates to a success state. 
-  - Also provided in _BooleanResult_ are a method runIfTrue which is only run when the success value is true.
-  - Also provided in _BooleanResult_ are a method runIfFalse which is only run when the success value is false.
-
-##### `runIfError` 
-
-The runnable is run if the result is in the error state.
-
-- Argument(s)
-  - A runnable which are run if the result is an error.
-- Returns
-  - The original result unaltered.
-
-##### `runEither` 
-
-A method which accepts runnables for all the states of the Result class.
-
-- Argument(s)
-  - A runnable which are run if the result is a success.
-  - A runnable which are run if the result is an error.
-- Returns
-  - The original result unaltered.
-- Notes
-    - _OptionalResult_ also contains a three argument version of this method where the first argument is a runnable to run if has a success value, the second argument is a runnable to run if the _OptionalResult_ is empty and the third is a runnable to run if the result is an error.
-    - _BooleanResult_ also contains a three argument version of this method where the first argument is a runnable to run when the success value is true, the second argument is a runnable to run if the success value is false and the third is a runnable to run if the result is an error.
-
-##### `run` 
-
-The runnable is run no matter what state the Result class has.
-
-- Argument(s)
-  - A runnable which are always run, both in the case of success state or error state.
-- Returns
-  - The original result unaltered.
-
-#### Verify method
-
-##### `verify` 
-
-A method which can verify the current success value of the Result class. If the verification fails, the returned result will contain the supplied error value.
-
-- Argument(s)
-  - A predicate which tests the success value of the result.
-  - A supplier for the error value if the predicate fails.
-- Returns
-  - The original result unaltered if the predicate evaluates to true.
-  - A new result containing the supplied error if the predicate evaluates to false.
-  - The original result unaltered if it already contained an error.
-- Notes
-  - For _OptionalResult_ the predicate tests an Optional. Also provided in _OptionalResult_ are a method `verifyValue` which tests the actual value, and is not run if _OptionalResult_ is empty.
-
-#### Retrieve value methods
-
-##### `merge` 
-
-A method to use when you want to merge the result, no matter if success or error, into an actual non-result-wrapped value.
-
-- Argument(s)
-  - A function mapping from the success value to a new type `N`.
-  - A function mapping from the error value to a new type `N`.
-- Returns
-  - The value mapped from either the success or error value.
-- Notes 
-  - _OptionalResult_ also contains a three argument version of this method where the first argument is a function mapping the success value, the second argument is a supplier to provide the value if the _OptionalResult_ is empty and the third is a function mapping the error value.
-  - _BooleanResult_ also contains a three argument version of this method where the first argument is a supplier providing a value when the success value is true, the second argument is a supplier providing a value if the success value is false and the third is a function mapping the error value.
-  - _VoidResult_ contains a variation of this method where the first argument is a supplier providing the value if the _VoidResult_ is in success state and the second is a function mapping the error value.
-  
-
-##### `orElse` 
-
-Returns the success value of the result, or the provided argument value if the result is in error state.
-
-- Argument(s)
-  - A value to return if no success value is present.
-- Returns
-  - The success value of the result, otherwise the argument value.
-- Notes:
-  - Not present in _VoidResult_.
-  - _OptionalResult_ has a variation of this method `valueOrElse` which returns the argument value if the _OptionalResult_ both is empty or contain an error.
-
-##### `orElseGet` 
-
-Returns the success value of the result, or the supplied value from the provided argument supplier if the result is in error state.
-
-- Argument(s)
-  - A supplier providing the value to return if no success value is present.
-- Returns
-  - The success value of the result, otherwise the value provided by the argument supplier.
-- Notes
-  - Not present in _VoidResult_
-  - _OptionalResult_ has a variation of this method `valueOrElseGet` which returns the value provided by the argument supplier if the _OptionalResult_ both is empty or contain an error.
-
-##### `orElseThrow`
-
-Returns the success value of the result, or throws the supplied exception from the provided argument supplier if the result is in error state.
-
-- Argument(s)
-  - A supplier providing the exception to throw if no success value is present.
-- Returns
-  - The success value of the result.
-  - Otherwise the exception provided by the argument supplier is thrown.
-- Notes
-  - In _VoidResult_ this is a void-method.
-  - _OptionalResult_ has a variation of this method `valueOrElseThrow` which throws the supplied exception if the _OptionalResult_ both is empty or contain an error.
-  
-#### Change Result Class Methods
-
-##### `toOptionalResult`
-
-Returns an _OptionalResult_ containing either the success value or error value of the original result.
-
-- No arguments
-- Returns
-  - An _OptionalResult_ containing either the success value or the error value from the original result.
-- Notes
-  - If the original result is a _VoidResult_, then the _OptionalResult_ will either be empty or contain the error value from the _VoidResult_.
-  - Not present in _OptionalResult_.
-  
-##### `toVoidResult` 
-
-Returns an _VoidResult_ either in success state or containing the error value of the original result.
-
-  - No arguments
-  - Returns
-    - A _VoidResult_ in success state or containing the error value from the original result.
-  - Notes
-    - Not present in _VoidResult_
-  
-##### `toResult` 
-
-A method present in _OptionalResult_ for creating a Result from the _OptionalResult_ success value.
-
-  - Argument(s)
-    - A supplier providing the error value to create a Result with if the _OptionalResult_ is empty.
-  - Returns
-    - A Result containing the success value of the _OptionalResult_, or an error if the _OptionalResult_ was empty or contained error.
-  - Notes
-    - Only present in _OptionalResult_.
-
-
-
-
+    
+### [Result](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html)
+
+#### Static factory methods
+
+[`success(T value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#success(T))<br/>
+[`error(E value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#error(E))
+
+#### Instance methods
+
+[`map(Function<T, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#map(java.util.function.Function))<br/>
+[`mapToOptional(Function<T, Optional<N>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#mapToOptional(java.util.function.Function))<br/>
+[`mapToBoolean(Function<T, Boolean> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#mapToBoolean(java.util.function.Function))<br/>
+[`mapError(Function<E, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#mapError(java.util.function.Function))<br/>
+
+[`flatMap(Function<T, Result<N, E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#flatMap(java.util.function.Function))<br/>
+[`flatMapToOptionalResult(Function<T, OptionalResult<N, E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#flatMapToOptionalResult(java.util.function.Function))<br/>
+[`flatMapToBooleanResult(Function<T, BooleanResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#flatMapToBooleanResult(java.util.function.Function))<br/>
+[`flatMapToVoidResult(Function<T, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#flatMapToVoidResult(java.util.function.Function))<br/>
+
+[`consume(Consumer<T> consumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#consume(java.util.function.Consumer))<br/>
+[`consumeError(Consumer<E> consumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#consumeError(java.util.function.Consumer))<br/>
+[`consumeEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<T> valueConsumer,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<E> errorConsumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#consumeEither(java.util.function.Consumer,java.util.function.Consumer))<br/>
+
+[`runIfSuccess(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#runIfSuccess(java.lang.Runnable))<br/>
+[`runIfError(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#runIfError(java.lang.Runnable))<br/>
+[`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable successRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#runEither(java.lang.Runnable,java.lang.Runnable))<br/>
+[`run(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#run(java.lang.Runnable))<br/>
+
+[`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<T> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
+
+[`merge(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<T, N> valueFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#merge(java.util.function.Function,java.util.function.Function))<br/>
+[`orElse(T other)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#orElse(T))<br/>
+[`orElseGet(Function<E, T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#orElseGet(java.util.function.Function))<br/>
+[`orElseThrow(Function<E, X> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#orElseThrow(java.util.function.Function))<br/>
+
+[`toOptionalResult()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#toOptionalResult())<br/>
+[`toVoidResult()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#toVoidResult())
+    
+### [OptionalResult](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html)
+
+#### Static factory methods
+
+[`success(Optional<T> maybeValue)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#success(java.util.Optional))<br/>
+[`success(T value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#success(T))<br/>
+[`successNullable(T value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#successNullable(T))<br/>
+[`empty()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#empty())<br/>
+[`error(E value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#error(E))
+
+#### Instance methods
+
+[`map(Function<Optional<T>, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#map(java.util.function.Function))<br/>
+[`mapToOptional(Function<Optional<T>, Optional<N>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#mapToOptional(java.util.function.Function))<br/>
+[`mapToBoolean(Function<<Optional<T>, Boolean> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#mapToBoolean(java.util.function.Function))<br/>
+[`mapError(Function<E, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#mapError(java.util.function.Function))<br/>
+[`mapValue(Function<T, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#mapValue(java.util.function.Function))<br/>
+[`mapValueToOptional(Function<T, Optional<N>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#mapValueToOptional(java.util.function.Function))<br/>
+
+[`flatMap(Function<Optional<T>, Result<N, E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatMap(java.util.function.Function))<br/>
+[`flatMapToOptionalResult(Function<Optional<T>, OptionalResult<N, E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatMapToOptionalResult(java.util.function.Function))<br/>
+[`flatMapToBooleanResult(Function<Optional<T>, BooleanResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatMapToBooleanResult(java.util.function.Function))<br/>
+[`flatMapToVoidResult(Function<Optional<T>, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatMapToVoidResult(java.util.function.Function))<br/>
+
+[`flatMapValueWithResult(Function<T, Result<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatMapValueWithResult(java.util.function.Function))<br/>
+[`flatMapValueWithOptionalResult(Function<T, OptionalResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatMapValueWithOptionalResult(java.util.function.Function))<br/>
+[`flatMapValueWithBooleanResult(Function<T, BooleanResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatMapValueWithBooleanResult(java.util.function.Function))<br/>
+
+[`consume(Consumer<Optional<T>> consumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#consume(java.util.function.Consumer))<br/>
+[`consumeValue(Consumer<T> consumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#consumeValue(java.util.function.Consumer))<br/>
+[`consumeError(Consumer<E> consumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#consumeError(java.util.function.Consumer))<br/>
+[`consumeEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<Optional<T>> successConsumer,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<E> errorConsumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#consumeEither(java.util.function.Consumer,java.util.function.Consumer))<br/>
+[`consumeEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<T> valueConsumer,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable emptyRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<E> errorConsumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#consumeEither(java.util.function.Consumer,java.lang.Runnable,java.util.function.Consumer))<br/>
+
+[`runIfSuccess(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfSuccess(java.lang.Runnable))<br/>
+[`runIfValue(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfValue(java.lang.Runnable))<br/>
+[`runIfEmpty(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfEmpty(java.lang.Runnable))<br/>
+[`runIfError(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfError(java.lang.Runnable))<br/>
+[`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable successRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runEither(java.lang.Runnable,java.lang.Runnable))<br/>
+[`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable valueRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable emptyRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runEither(java.lang.Runnable,java.lang.Runnable))<br/>
+[`run(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#run(java.lang.Runnable))<br/>
+
+[`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<Optional<T>> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
+[`verifyValue(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<T> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verifyValue(java.util.function.Predicate,java.util.function.Supplier))<br/>
+
+[`merge(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<Optional<T>, N> successFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#merge(java.util.function.Function,java.util.function.Function))<br/>
+[`merge(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<T, N> valueFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> emptySupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#merge(java.util.function.Function,java.util.function.Supplier,java.util.function.Function))<br/>
+[`orElse(Optional<T> other)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#orElse(java.util.Optional)(T))<br/>
+[`valueOrElse(T other)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#valueOrElse(T))<br/>
+[`orElseGet(Function<E, Optional<T>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#orElseGet(java.util.function.Function))<br/>
+[`valueOrElseGet(Supplier<T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#valueOrElseGet(java.util.function.Supplier))<br/>
+[`orElseThrow(Function<E, X> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#orElseThrow(java.util.function.Function))<br/>
+[`valueOrElseThrow(Supplier<X> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#valueOrElseThrow(java.util.function.Supplier))<br/>
+
+[`flatten(Supplier<E> errorSupplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatten(java.util.function.Supplier))
+[`toVoidResult()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#toVoidResult())
 
 
