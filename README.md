@@ -4,6 +4,22 @@
 
 A result library helping you get rid of exceptions, enabling a more fluent coding style.
 
+- [Motivation](#motivation)
+- [Usage](#usage)
+- [API](#api)
+  - [Result](#result)
+    - [Static Factory Methods](#static-factory-methods)
+    - [Instance Methods](#instance-methods)
+  - [OptionalResult](#optionalresult)
+    - [Static Factory Methods](#static-factory-methods-1)
+    - [Instance Methods](#instance-methods-1)
+  - [BooleanResult](#booleanresult)
+    - [Static Factory Methods](#static-factory-methods-2)
+    - [Instance Methods](#instance-methods-2)
+  - [OptionalResult](#voidresult)
+    - [Static Factory Methods](#static-factory-methods-3)
+    - [Instance Methods](#instance-methods-3)
+
 ## Motivation
 
 Programming with exceptions can be both tedious and error-prone. Checked exceptions gives much boilerplate code, while unchecked exceptions can be the source of errors if they are let loose in the system without sufficient handling. 
@@ -107,12 +123,12 @@ getCustomer(id).consumeEither(
     
 ### [Result](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html)
 
-#### Static factory methods
+#### Static Factory Methods
 
 [`success(T value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#success(T))<br/>
 [`error(E value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#error(E))
 
-#### Instance methods
+#### Instance Methods
 
 [`map(Function<T, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#map(java.util.function.Function))<br/>
 [`mapToOptional(Function<T, Optional<N>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#mapToOptional(java.util.function.Function))<br/>
@@ -145,7 +161,7 @@ getCustomer(id).consumeEither(
     
 ### [OptionalResult](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html)
 
-#### Static factory methods
+#### Static Factory Methods
 
 [`success(Optional<T> maybeValue)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#success(java.util.Optional))<br/>
 [`success(T value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#success(T))<br/>
@@ -153,7 +169,7 @@ getCustomer(id).consumeEither(
 [`empty()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#empty())<br/>
 [`error(E value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#error(E))
 
-#### Instance methods
+#### Instance Methods
 
 [`map(Function<Optional<T>, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#map(java.util.function.Function))<br/>
 [`mapToOptional(Function<Optional<T>, Optional<N>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#mapToOptional(java.util.function.Function))<br/>
@@ -202,14 +218,14 @@ getCustomer(id).consumeEither(
     
 ### [BooleanResult](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html)
 
-#### Static factory methods
+#### Static Factory Methods
 
 [`success(boolean value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#success(boolean))<br/>
 [`successTrue()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#successTrue())<br/>
 [`successFalse()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#successFalse())<br/>
 [`error(E value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#error(E))
 
-#### Instance methods
+#### Instance Methods
 
 [`map(Function<Boolean, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#map(java.util.function.Function))<br/>
 [`mapToOptional(Function<Boolean, Optional<N>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#mapToOptional(java.util.function.Function))<br/>
@@ -249,12 +265,12 @@ getCustomer(id).consumeEither(
 
 ### [VoidResult](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html)
 
-#### Static factory methods
+#### Static Factory Methods
 
 [`success()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#success())<br/>
 [`error(E value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#error(E))
 
-#### Instance methods
+#### Instance Methods
 
 [`mapError(Function<E, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#mapError(java.util.function.Function))<br/>
 
