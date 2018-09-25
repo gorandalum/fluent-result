@@ -15,6 +15,7 @@ import java.util.function.Supplier;
  *
  * @param <E> the type of the error value
  */
+@SuppressWarnings("WeakerAccess")
 public final class VoidResult<E> extends BaseResult<Void, E> {
 
     private VoidResult(E error) {
@@ -105,7 +106,7 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
     public <N> OptionalResult<N, E> replaceWithOptional(
             Supplier<Optional<? extends N>> supplier) {
         return Implementations.map(
-                val -> (Optional<N>) supplier.get(),
+                val -> supplier.get(),
                 OptionalResult::success,
                 OptionalResult::error,
                 this);
@@ -151,10 +152,12 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
      */
     public <N> Result<N, E> flatReplace(
             Supplier<Result<? extends N, ? extends E>> supplier) {
-        return (Result<N, E>) Implementations.flatMap(
+        @SuppressWarnings("unchecked")
+        Result<N, E> res = (Result<N, E>) Implementations.flatMap(
                 val -> supplier.get(),
                 this,
                 Result::error);
+        return res;
     }
 
     /**
@@ -174,10 +177,12 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
      */
     public <N> OptionalResult<N, E> flatReplaceToOptionalResult(
             Supplier<OptionalResult<? extends N, ? extends E>> supplier) {
-        return (OptionalResult<N, E>) Implementations.flatMap(
+        @SuppressWarnings("unchecked")
+        OptionalResult<N, E> res = (OptionalResult<N, E>) Implementations.flatMap(
                 val -> supplier.get(),
                 this,
                 OptionalResult::error);
+        return res;
     }
 
     /**
@@ -195,10 +200,12 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
      */
     public BooleanResult<E> flatReplaceToBooleanResult(
             Supplier<BooleanResult<? extends E>> supplier) {
-        return (BooleanResult<E>) Implementations.flatMap(
+        @SuppressWarnings("unchecked")
+        BooleanResult<E> res = (BooleanResult<E>) Implementations.flatMap(
                 val -> supplier.get(),
                 this,
                 BooleanResult::error);
+        return res;
     }
 
     /**
@@ -214,7 +221,10 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
      * {@code null} or returns {@code null}
      */
     public VoidResult<E> flatReplaceToVoidResult(Supplier<VoidResult<? extends E>> supplier) {
-        return (VoidResult<E>) Implementations.flatMap(val -> supplier.get(), this);
+        @SuppressWarnings("unchecked")
+        VoidResult<E> res = (VoidResult<E>) Implementations.flatMap(
+                val -> supplier.get(), this);
+        return res;
     }
 
     /**
@@ -323,7 +333,7 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
     }
 
     /**
-     * If in success state, does-nothin, otherwise throws the exception returned
+     * If in success state, does nothing, otherwise throws the exception returned
      * by the given function.
      *
      * @param <X> type of the exception to be thrown

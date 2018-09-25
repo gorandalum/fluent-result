@@ -151,8 +151,11 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * @throws NullPointerException if the given mapping function is
      * {@code null} or returns {@code null}
      */
-    public <N> Result<N, E> flatMap(Function<? super T, ? extends Result<? extends N, ? extends E>> function) {
-        return (Result<N, E>) Implementations.flatMap(function, this);
+    public <N> Result<N, E> flatMap(
+            Function<? super T, ? extends Result<? extends N, ? extends E>> function) {
+        @SuppressWarnings("unchecked")
+        Result<N, E> res = (Result<N, E>) Implementations.flatMap(function, this);
+        return res;
     }
 
     /**

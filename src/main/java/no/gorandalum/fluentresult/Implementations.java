@@ -131,15 +131,21 @@ final class Implementations {
             Function<? super N, NR> errorConstructor,
             R instance) {
         Objects.requireNonNull(function);
-        return instance.isSuccess() ?
-                (NR)instance :
-                errorConstructor.apply(function.apply(instance.error()));
+        if (instance.isSuccess()) {
+            @SuppressWarnings("unchecked")
+            NR res = (NR) instance;
+            return res;
+        } else {
+            return errorConstructor.apply(function.apply(instance.error()));
+        }
     }
 
     static <T, E, N, NR extends BaseResult<? extends N, ? extends E>, R extends BaseResult<T, E>> NR flatMap(
             Function<? super T, ? extends NR> function, R instance) {
         Objects.requireNonNull(function);
-        return flatMap(function, instance, err -> (NR)instance);
+        @SuppressWarnings("unchecked")
+        NR res = (NR) instance;
+        return flatMap(function, instance, err -> res);
     }
 
     static <T, E, N, NR extends BaseResult<? extends N, ? extends E>, R extends BaseResult<T, E>> NR flatMap(

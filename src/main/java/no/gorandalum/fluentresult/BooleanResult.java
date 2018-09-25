@@ -17,6 +17,7 @@ import java.util.function.Supplier;
  *
  * @param <E> the type of the error value
  */
+@SuppressWarnings("WeakerAccess")
 public final class BooleanResult<E> extends BaseResult<Boolean, E> {
 
     private BooleanResult(Boolean value, E error) {
@@ -115,7 +116,7 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      */
     public <N> OptionalResult<N, E> mapToOptional(
             Function<Boolean, ? extends Optional<? extends N>> function) {
-        return (OptionalResult<N, E>) Implementations.map(
+        return Implementations.map(
                 function,
                 OptionalResult::success,
                 OptionalResult::error,
@@ -178,7 +179,10 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      */
     public <N> Result<N, E> flatMap(
             Function<Boolean, Result<? extends N, ? extends E>> function) {
-        return (Result<N, E>) Implementations.flatMap(function, this, Result::error);
+        @SuppressWarnings("unchecked")
+        Result<N, E> res = (Result<N, E>) Implementations.flatMap(
+                function, this, Result::error);
+        return res;
     }
 
     /**
@@ -199,8 +203,10 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      */
     public <N> OptionalResult<N, E> flatMapToOptionalResult(
             Function<Boolean, OptionalResult<? extends N, ? extends E>> function) {
-        return (OptionalResult<N, E>) Implementations.flatMap(
+        @SuppressWarnings("unchecked")
+        OptionalResult<N, E> res = (OptionalResult<N, E>) Implementations.flatMap(
                 function, this, OptionalResult::error);
+        return res;
     }
 
     /**
@@ -218,7 +224,9 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      */
     public BooleanResult<E> flatMapToBooleanResult(
             Function<Boolean, BooleanResult<? extends E>> function) {
-        return (BooleanResult<E>) Implementations.flatMap(function, this);
+        @SuppressWarnings("unchecked")
+        BooleanResult<E> res = (BooleanResult<E>) Implementations.flatMap(function, this);
+        return res;
     }
 
     /**
@@ -237,7 +245,10 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      */
     public VoidResult<E> flatMapToVoidResult(
             Function<Boolean, VoidResult<? extends E>> function) {
-        return (VoidResult<E>) Implementations.flatMap(function, this, VoidResult::error);
+        @SuppressWarnings("unchecked")
+        VoidResult<E> res = (VoidResult<E>) Implementations.flatMap(
+                function, this, VoidResult::error);
+        return res;
     }
 
     /**
