@@ -244,7 +244,39 @@ getCustomer(id).consumeEither(
 [`orElseGet(Function<E, Boolean> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#orElseGet(java.util.function.Function))<br/>
 [`orElseThrow(Function<E, X> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#orElseThrow(java.util.function.Function))<br/>
 
-[`toOptionalResult()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#toOptionalResult())
+[`toOptionalResult()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#toOptionalResult())<br/>
 [`toVoidResult()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#toVoidResult())
 
+### [VoidResult](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html)
 
+#### Static factory methods
+
+[`success()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#success())<br/>
+[`error(E value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#error(E))
+
+#### Instance methods
+
+[`mapError(Function<E, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#mapError(java.util.function.Function))<br/>
+
+[`replace(Supplier<N> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#replace(java.util.function.Supplier))<br/>
+[`replaceWithOptional(Supplier<Optional<N>> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#replaceWithOptional(java.util.function.Supplier))<br/>
+[`replaceWithBoolean(Supplier<Boolean> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#replaceWithBoolean(java.util.function.Supplier))<br/>
+
+[`flatReplace(Supplier<Result<N, E>> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#flatReplace(java.util.function.Supplier))<br/>
+[`flatReplaceToOptionalResult(Supplier<OptionalResult<N, E>> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#flatReplaceToOptionalResult(java.util.function.Supplier))<br/>
+[`flatReplaceToBooleanResult(Supplier<BooleanResult<E>> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#flatReplaceToBooleanResult(java.util.function.Supplier))<br/>
+[`flatReplaceToVoidResult(Supplier<VoidResult<E>> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#flatReplaceToVoidResult(java.util.function.Supplier))<br/>
+
+[`consumeError(Consumer<E> consumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#consumeError(java.util.function.Consumer))<br/>
+[`consumeEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable successRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<E> errorConsumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#consumeEither(java.lang.Runnable,java.util.function.Consumer))<br/>
+
+[`runIfSuccess(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#runIfSuccess(java.lang.Runnable))<br/>
+[`runIfError(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#runIfError(java.lang.Runnable))<br/>
+[`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable successRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#runEither(java.lang.Runnable,java.lang.Runnable))<br/>
+[`run(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#run(java.lang.Runnable))<br/>
+
+[`merge(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> valueSupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#merge(java.util.function.Supplier,java.util.function.Function))<br/>
+[`orElseThrow(Function<E, X> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#orElseThrow(java.util.function.Function))<br/>
+
+[`toOptionalResult()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#toOptionalResult())<br/>
+    
