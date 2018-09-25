@@ -306,6 +306,8 @@ public final class Result<T, E> extends BaseResult<T, E> {
      *
      * @param predicate the predicate used to verify the success value, if
      * success state
+     * @param errorSupplier supplier providing the error if predicate evaluates
+     * to false
      * @return the original {@code Result} unaltered, unless the predicate
      * evaluates to false, then a new {@code Result} in error state is returned
      * containing the supplied error value
@@ -369,7 +371,7 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * If in success state, returns the success value, otherwise throws the
      * exception returned by the given function.
      *
-     * @param <X> Type of the exception to be thrown
+     * @param <X> type of the exception to be thrown
      * @param function the mapping function producing an exception by applying
      * the error value, if not in success state
      * @return the success value, if success state

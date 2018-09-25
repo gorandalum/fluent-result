@@ -326,7 +326,7 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
      * If in success state, does-nothin, otherwise throws the exception returned
      * by the given function.
      *
-     * @param <X> Type of the exception to be thrown
+     * @param <X> type of the exception to be thrown
      * @param function the mapping function producing an exception by applying
      * the error value, if not in success state
      * @throws X if in error state
@@ -346,6 +346,8 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
      * <p>
      * The returned {@code OptionalResult} will never have a value.
      *
+     * @param <N> the type of the success value in the returned
+     * {@code OptionalResult}, inferred from the variable
      * @return an {@code OptionalResult} in empty success state or in error
      * state containing the error value from this {@code VoidResult}
      */

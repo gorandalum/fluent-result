@@ -71,6 +71,15 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <reportOutputDirectory>${project.basedir}/doc/</reportOutputDirectory>
+                    <additionalOptions>-html5</additionalOptions>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
                 <version>1.4.2</version>
@@ -126,6 +135,9 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <additionalOptions>-html5</additionalOptions>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>

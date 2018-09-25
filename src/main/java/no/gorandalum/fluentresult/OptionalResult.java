@@ -604,6 +604,8 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      *
      * @param predicate the predicate used to verify the optional success value,
      * if success state
+     * @param errorSupplier supplier providing the error if predicate evaluates
+     * to false
      * @return the original {@code OptionalResult} unaltered, unless the
      * predicate evaluates to false, then a new {@code OptionalResult} in error
      * state is returned containing the supplied error value
@@ -631,6 +633,8 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      *
      * @param predicate the predicate used to verify the success value, if
      * success state with a success value
+     * @param errorSupplier supplier providing the error if predicate evaluates
+     * to false
      * @return the original {@code OptionalResult} unaltered, unless the
      * predicate evaluates to false, then a new {@code OptionalResult} in error
      * state is returned containing the supplied error value
@@ -762,7 +766,7 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * If in success state, returns the optional success value, otherwise throws
      * the exception returned by the given function.
      *
-     * @param <X> Type of the exception to be thrown
+     * @param <X> type of the exception to be thrown
      * @param function the mapping function producing an exception by applying
      * the error value, if not in success state
      * @return the optional success value, if success state
@@ -779,7 +783,7 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * If in success state with a success value, returns the success value,
      * otherwise throws the exception returned by the given function.
      *
-     * @param <X> Type of the exception to be thrown
+     * @param <X> type of the exception to be thrown
      * @param supplier the supplier providing the return value, if not in
      * success state with a success value
      * @return the success value, if success state with success value
@@ -814,6 +818,8 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * in error state, containing the error value supplied by the given error
      * supplier.
      *
+     * @param errorSupplier supplier providing the error value if empty success
+     * state
      * @return a {@code Result} either in success state containing the success
      * value from this {@code OptionalResult}, or in error state containing
      * either the error value from the given error supplier or the error value

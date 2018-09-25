@@ -166,6 +166,8 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      * mapping function to the boolean success value, otherwise returns a
      * {@code Result} containing the error value of this {@code BooleanResult}.
      *
+     * @param <N> the type of success value which may be present in the
+     * {@code Result} returned by the mapping function
      * @param function the mapping function to apply to the boolean success
      * value, if success state
      * @return the {@code Result} returned from the mapping function, if in
@@ -433,6 +435,8 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      *
      * @param predicate the predicate used to verify the boolean success value,
      * if success state
+     * @param errorSupplier supplier providing the error if predicate evaluates
+     * to false
      * @return the original {@code BooleanResult} unaltered, unless the predicate
      * evaluates to false, then a new {@code BooleanResult} in error state is returned
      * containing the supplied error value
@@ -555,7 +559,7 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      * If in success state, returns the boolean success value, otherwise throws
      * the exception returned by the given function.
      *
-     * @param <X> Type of the exception to be thrown
+     * @param <X> type of the exception to be thrown
      * @param function the mapping function producing an exception by applying
      * the error value, if not in success state
      * @return the boolean success value, if success state

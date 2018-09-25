@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"no.gorandalum.fluentresult","l":"BooleanResult"},{"p":"no.gorandalum.fluentresult","l":"OptionalResult"},{"p":"no.gorandalum.fluentresult","l":"Result"},{"p":"no.gorandalum.fluentresult","l":"VoidResult"}]
