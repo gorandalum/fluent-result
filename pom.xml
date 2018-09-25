@@ -74,9 +74,18 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <reportOutputDirectory>${project.basedir}/doc/</reportOutputDirectory>
+                    <reportOutputDirectory>${project.basedir}/</reportOutputDirectory>
                     <additionalOptions>-html5</additionalOptions>
+                    <destDir>docs</destDir>
                 </configuration>
             </plugin>
             <plugin>
