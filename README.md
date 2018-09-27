@@ -2,7 +2,7 @@
 
 # Fluent Result
 
-A result library helping you get rid of exceptions, enabling a more fluent coding style.
+A Java result library helping you get rid of exceptions, enabling a more fluent coding style.
 
 - [Motivation](#motivation)
 - [Usage](#usage)
