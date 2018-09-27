@@ -18,6 +18,12 @@ import java.util.function.Supplier;
 @SuppressWarnings("WeakerAccess")
 public final class VoidResult<E> extends BaseResult<Void, E> {
 
+    /**
+     * Common instance for success {@code VoidResult}.
+     */
+    private static final VoidResult<?> RESULT_SUCCESS =
+            new VoidResult<>(null);
+
     private VoidResult(E error) {
         super(null, error, VoidResult.class);
     }
@@ -29,7 +35,9 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
      * @return a {@code VoidResult} in success state
      */
     public static <E> VoidResult<E> success() {
-        return new VoidResult<>(null);
+        @SuppressWarnings("unchecked")
+        VoidResult<E> res = (VoidResult<E>)RESULT_SUCCESS;
+        return res;
     }
 
     /**

@@ -20,6 +20,18 @@ import java.util.function.Supplier;
 @SuppressWarnings("WeakerAccess")
 public final class BooleanResult<E> extends BaseResult<Boolean, E> {
 
+    /**
+     * Common instance for true {@code BooleanResult}.
+     */
+    private static final BooleanResult<?> RESULT_TRUE =
+            new BooleanResult<>(true, null);
+
+    /**
+     * Common instance for false {@code BooleanResult}.
+     */
+    private static final BooleanResult<?> RESULT_FALSE =
+            new BooleanResult<>(false, null);
+
     private BooleanResult(Boolean value, E error) {
         super(value, error, BooleanResult.class);
     }
@@ -35,7 +47,9 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      * @throws NullPointerException if given success value is {@code null}
      */
     public static <E> BooleanResult<E> success(boolean value) {
-        return new BooleanResult<>(value, null);
+        @SuppressWarnings("unchecked")
+        BooleanResult<E> res = (BooleanResult<E>)(value ? RESULT_TRUE : RESULT_FALSE);
+        return res;
     }
 
     /**
@@ -47,7 +61,9 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      * as the the boolean success value.
      */
     public static <E> BooleanResult<E> successTrue() {
-        return new BooleanResult<>(true, null);
+        @SuppressWarnings("unchecked")
+        BooleanResult<E> res = (BooleanResult<E>)RESULT_TRUE;
+        return res;
     }
 
     /**
@@ -59,7 +75,9 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      * as the the boolean success value.
      */
     public static <E> BooleanResult<E> successFalse() {
-        return new BooleanResult<>(false, null);
+        @SuppressWarnings("unchecked")
+        BooleanResult<E> res = (BooleanResult<E>)RESULT_FALSE;
+        return res;
     }
 
     /**

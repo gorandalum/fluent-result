@@ -21,6 +21,12 @@ import java.util.function.Supplier;
 @SuppressWarnings({"WeakerAccess", "OptionalUsedAsFieldOrParameterType"})
 public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
 
+    /**
+     * Common instance for empty {@code OptionalResult}.
+     */
+    private static final OptionalResult<?, ?> RESULT_EMPTY =
+            new OptionalResult<>(Optional.empty(), null);
+
     private OptionalResult(Optional<T> value, E error) {
         super(value, error, OptionalResult.class);
     }
@@ -41,7 +47,7 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     public static <T, E> OptionalResult<T, E> success(Optional<? extends T> maybeValue) {
         @SuppressWarnings("unchecked")
         Optional<T> t = (Optional<T>) Objects.requireNonNull(maybeValue);
-        return new OptionalResult<>(t, null);
+        return t.map(OptionalResult::<T, E>success).orElse(empty());
     }
 
     /**
@@ -70,7 +76,10 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * success value if not null, otherwise an empty {@code OptionalResult}
      */
     public static <T, E> OptionalResult<T, E> successNullable(T value) {
-        return new OptionalResult<>(Optional.ofNullable(value), null);
+        if (value == null) {
+            return empty();
+        }
+        return new OptionalResult<>(Optional.of(value), null);
     }
 
     /**
@@ -82,7 +91,9 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * @return an empty {@code OptionalResult} in success state
      */
     public static <T, E> OptionalResult<T, E> empty() {
-        return new OptionalResult<>(Optional.empty(), null);
+        @SuppressWarnings("unchecked")
+        OptionalResult<T, E> res = (OptionalResult<T, E>) RESULT_EMPTY;
+        return res;
     }
 
     /**
