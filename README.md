@@ -6,6 +6,11 @@ A Java result library helping you get rid of exceptions, enabling a more fluent 
 
 - [Motivation](#motivation)
 - [Usage](#usage)
+  - [Creating a Result](#creating-a-result)
+  - [Chaining](#chaining)
+  - [Additional Result Classes](#chaining)
+  - [Verifying the Value](#verifying-the-value)
+  - [Extracting the Value](#extracting-the-value)
 - [API](#api)
   - [Result](#result)
     - [Static Factory Methods](#static-factory-methods)
@@ -30,6 +35,8 @@ The introduction of Optional was a great step forward for Java, but as a class i
  
 ## Usage
 
+### Creating a Result
+
 Make methods that can give an error return a `Result<T, E>` where T is the type of the return value when the method is successful, and E is the type of error value when the method is not successful.
 
 ```java
@@ -47,6 +54,9 @@ Now the code can be used like this:
 ```java
 Result<Customer, String> customerResult = getCustomer(id);
 ```
+
+### Chaining
+
 However the full benefit of using the result library is more visible when using chaining and utilizing other methods that return Result values.
 
 Some other methods to use while chaining:
@@ -61,44 +71,152 @@ public void logError(String customerId, String accountId, String errorMsg)
 Now the above methods can be called by chaining the calls.
 
 ```java
-public BigDecimal getBalance(String customerId, String accountId) {
+public Result<BigDecimal, String> getBalance(String customerId, String accountId) {
     return getCustomer(customerId)
         .map(Customer::getAccounts)
         .flatMap(accounts -> findAccount(accounts, accountId))
         .consume(this::logAccountInfo)
         .map(Account::getBalance)
-        .consumeError(errMsg -> logError(customerId, accountId, errMsg))
-        .orElse(BigDecimal.ZERO);
+        .consumeError(errMsg -> logError(customerId, accountId, errMsg));
 }
 ```
 
 In the above chain the methods `map`, `flatMap` and `consume` is invoked only if there is an actual success value in the Result, and not if an error were returned somewhere in the chain. The method `consumeError` is only invoked if an error is present.
 
-Fluent Result also provides Result classes for some other normal result types. This is the classes _OptionalResult_, _BooleanResult_ and _VoidResult_. These classes provide some additional methods relevant for their type, like `runIfEmpty` on _OptionalResult_ and `runIfTrue` on _BooleanResult_. Or they remove some unnecessary methods like the `map`/`flatMap` methods on _VoidResult_.
+### Additional Result Classes
 
-Example of a method returning an _OptionalResult_: 
+Some cases of Result value types frequently happen, like `Result<Optional<T>, E>`, `Result<Boolean, E>` and `Result<Void, E>`. For these frequent result types we provided the additional Result classes _OptionalResult_, _BooleanResult_ and _VoidResult_.
+
+These classes provide some additional methods relevant for their type, and remove method not relevant for their type. They create a better facade for some of the recurring patterns happening when using normal _Result_.
+
+Comparing using `Result<Optional<T>, E>` and `OptionalResult<T, E>`. First with `Result<Optional<Customer>, E>`:
 ```java
-public OptionalResult<Movie, String> findMovie(String title) {
+public Result<Optional<Integer>, String> getAge(String customerId) {
+    // Returns Result<Optional<Customer>, String>
+    return getCustomer(customerId)
+        .runIfSuccess(maybeCustomer -> maybeCustomer.ifPresentOrElse(
+                customer -> LOGGER.info("Customer + " customer.getName() + " found"),
+                () -> LOGGER.warn("Customer not found")
+        ))
+        .map(maybeCustomer -> maybeCustomer.map(Customer::getAge);
+}
+```
+With `OptionalResult<Customer, E>`:
+```java
+public OptionalResult<Integer, String> getAge(String customerId) {
+    // Returns OptionalResult<Customer, String>
+    return getCustomer(customerId)
+        .runIfValue(customer -> LOGGER.info("Customer + " customer.getName() + " found"))
+        .runIfEmpty(() -> LOGGER.warn("Customer not found"))
+        .mapValue(Customer::getAge);
+}
+```
+
+Comparing using `Result<Boolean, E>` and `BooleanResult<E>`. First with `Result<Boolean, E>`:
+```java
+public boolean isOldEnough(String customerId) {
+    // Returns Result<Customer, String>
+    return getCustomer(customerId)
+        .map(Customer::getAge)
+        .map(age -> age >= 18) // Returns Result<Boolean, String>
+        .runIfSuccess(oldEnough -> {
+            if (oldEnough) {
+                LOGGER.info("Customer is old enough");
+            } else {
+                LOGGER.warn("Customer is underage");  
+            }
+        })
+        .runIfError(errMsg -> LOGGER.warn("Error getting customer: " + errMsg))
+        .orElse(false);
+}
+```
+With `BooleanResult<E>`:
+```java
+public boolean isOldEnough(String customerId) {
+    // Returns Result<Customer, String>
+    return getCustomer(customerId)
+        .map(Customer::getAge)
+        .mapToBoolean(age -> age >= 18) // Returns BooleanResult<String>
+        .runIfTrue(() -> LOGGER.info("Customer is old enough"))
+        .runIfFalse(() -> LOGGER.warn("Customer is underage"))
+        .runIfError(errMsg -> LOGGER.warn("Error getting customer: " + errMsg))
+        .orElseFalse();
+}
+```
+
+_OptionalResult_ and _BooleanResult_ also have three argument versions of the `consumeEither`, `runEither` and `merge` methods.
+
+The above example, modified to `runEither`:
+```java
+public boolean isOldEnough(String customerId) {
+    // Returns Result<Customer, String>
+    return getCustomer(customerId)
+        .map(Customer::getAge)
+        .mapToBoolean(age -> age >= 18) // Returns BooleanResult<String>
+        .runEither(
+                () -> LOGGER.info("Customer is old enough")),
+                () -> LOGGER.warn("Customer is underage")),
+                errMsg -> LOGGER.warn("Error getting customer: " + errMsg))
+        .orElseFalse();
+}
+```
+
+The additional _Result_ classes also have static factory methods relevant for their value type, examples include `OptionalResult.successNullable(T value)`, `OptionalResult.empty()`, `BooleanResult.successTrue()` and `VoidResult.success()`.
+
+Creating an _OptionalResult_: 
+```java
+public OptionalResult<Customer, String> getCustomer(String id) {
     try {
-        Movie movie = service.getMovie(title); // May be null
-        return OptionalResult.successNullable(movie);
+        Customer customer = service.getCustomer(id); // May be null
+        return OptionalResult.successNullable(customer);
     } catch (RuntimeException ex) {
         return Result.error(ex.getMessage());
     }
 }
 ```
 
-All Result classes have methods for mapping to the other Result classes.
+All _Result_ classes have methods for mapping and flat mapping to the other _Result_ classes.
 
 Example of mapping from a _Result_ to a _BooleanResult_ by using the method `mapToBoolean`:
 
 ```java
-public BooleanResult<String> isUnderAge(String customerId) {
+public BooleanResult<String> isOldEnough(String customerId) {
     return getCustomer(customerId)
         .mapToBoolean(customer -> customer.getAge() >= 18)
         .runIfFalse(() -> LOGGER.warn("Customer is underage"));
 }
 ```
+
+### Verifying the Value
+
+The method `verify` can be used for verifying the value of the _Result_, and if the verification fails the returned _Result_ will contain an error value.
+
+Example of verifying the age of a customer. If the customer is under 18 then the
+returned _Result_ will contain the given error message.
+
+```java
+public Result<Customer, String> getGrownUpCustomer(String customerId) {
+    // Returns Result<Customer, String>
+    return getCustomer(customerId)
+        .verify(
+                customer -> customer.getAge() >= 18,
+                () -> "Customer is not a grown up");
+}
+```
+
+For _OptionalResult_ you may also verify the actual value if present. If the _OptionalResult_ was already empty it will remain empty.
+
+```java
+public Result<Customer, String> getGrownUpCustomer(String customerId) {
+    // Returns OptionalResult<Customer, String>
+    return getCustomer(customerId)
+        .verifyValue(
+                customer -> customer.getAge() >= 18,
+                () -> "Customer is not a grown up");
+}
+```
+
+### Extracting the value
 
 The Result classes does not have methods like `get`, `isPresent` or `isSuccess`. We have seen these kind of methods misused on _Optional_, being the source of errors, or they may be used as an easy way out when the programmer don't want to program in a functional style.
 
@@ -118,6 +236,43 @@ getCustomer(id).consumeEither(
     this::doSomethingWithCustomer,
     this::logAnError);
 ```
+
+If you want to extract the value from the Result-object without consuming the methods `orElse`, `orElseGet` and `orElseThrow` known from _Optional_. Also provided are a method `merge` which can be used for mapping both the success value and the error value to a single return value.
+
+Example of `merge`:
+
+```java
+public Status getCustomerStatus() {
+    // getCustomer returns Result<Customer, String>
+    getCustomer(id).merge(
+            customer -> Status.CUSTOMER_EXISTS,
+            error -> Status.CUSTOMER_FETCH_ERROR
+}
+```
+
+There are also three argument versions of the `merge` method on _OptionalResult_ and _BooleanResult_:
+```java
+public Status getCustomerStatus() {
+    // getCustomer returns OptionalResult<Customer, String>
+    getCustomer(id).merge(
+            customer -> Status.CUSTOMER_EXISTS,
+            () -> Status.CUSTOMER_NOT_FOUND,
+            error -> Status.CUSTOMER_FETCH_ERROR
+}
+```
+
+```java
+public Status getCustomerStatus() {
+    // getCustomer returns Result<Customer, String>
+    getCustomer(id)
+            .mapToBoolean(customer -> customer.getAge() >= 18)
+            .merge(
+                      () -> Status.CUSTOMER_APPROVED,
+                      () -> Status.CUSTOMER_UNDERAGE,
+                      error -> Status.CUSTOMER_FETCH_ERROR
+}
+```
+
 
 ## API
     
