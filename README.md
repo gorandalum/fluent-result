@@ -87,7 +87,7 @@ In the above chain the methods `map`, `flatMap` and `consume` are invoked only i
 
 Some cases of Result value types frequently happen, like `Result<Optional<T>, E>`, `Result<Boolean, E>` and `Result<Void, E>`. For these frequent result types the additional Result classes _OptionalResult_, _BooleanResult_ and _VoidResult_ are provided.
 
-These classes provide some additional methods relevant for their type, and remove methods not relevant for their type. They create a better facade for some of the recurring patterns happening when using normal _Result_.
+These classes provide some additional methods relevant for their type, and remove methods not relevant for their type. They create a better facade for some of the recurring patterns happening when using the regular _Result_.
 
 Comparing using `Result<Optional<T>, E>` and `OptionalResult<T, E>`, first with `Result<Optional<Customer>, E>`:
 ```java
@@ -97,7 +97,7 @@ public Result<Optional<Integer>, String> getAge(String customerId) {
                 customer -> LOGGER.info("Customer + " customer.getName() + " found"),
                 () -> LOGGER.warn("Customer not found")
         ))
-        .map(maybeCustomer -> maybeCustomer.map(Customer::getAge);
+        .map(maybeCustomer -> maybeCustomer.map(Customer::getAge));
 }
 ```
 By using `OptionalResult<Customer, E>` the chain is more readable when methods like `consumeValue`, `runIfEmpty` and `mapValue` may be used:
@@ -114,8 +114,7 @@ Comparing using `Result<Boolean, E>` and `BooleanResult<E>`, first with `Result<
 ```java
 public boolean isOldEnough(String customerId) {
     return getCustomer(customerId) // Returns Result<Customer, String>
-        .map(Customer::getAge)
-        .map(age -> age >= 18) // Returns Result<Boolean, String>
+        .map(customer -> customer.getAge() >= 18) // Returns Result<Boolean, String>
         .runIfSuccess(oldEnough -> {
             if (oldEnough) {
                 LOGGER.info("Customer is old enough");
@@ -131,8 +130,7 @@ By using `BooleanResult<E>` the chain is more readable when methods like `runIfT
 ```java
 public boolean isOldEnough(String customerId) {
     return getCustomer(customerId) // Returns Result<Customer, String>
-        .map(Customer::getAge)
-        .mapToBoolean(age -> age >= 18) // Returns BooleanResult<String>
+        .mapToBoolean(customer -> customer.getAge() >= 18) // Returns BooleanResult<String>
         .runIfTrue(() -> LOGGER.info("Customer is old enough"))
         .runIfFalse(() -> LOGGER.warn("Customer is underage"))
         .runIfError(() -> LOGGER.warn("Error getting customer"))
@@ -146,8 +144,7 @@ The above example, modified to `runEither`:
 ```java
 public boolean isOldEnough(String customerId) {
     return getCustomer(customerId) // Returns Result<Customer, String>
-        .map(Customer::getAge)
-        .mapToBoolean(age -> age >= 18) // Returns BooleanResult<String>
+        .mapToBoolean(customer -> customer.getAge() >= 18) // Returns BooleanResult<String>
         .runEither(
                 () -> LOGGER.info("Customer is old enough"),
                 () -> LOGGER.warn("Customer is underage"),
@@ -165,19 +162,17 @@ public OptionalResult<Customer, String> getCustomer(String id) {
         Customer customer = service.getCustomer(id); // May be null
         return OptionalResult.successNullable(customer);
     } catch (RuntimeException ex) {
-        return Result.error(ex.getMessage());
+        return OptionalResult.error(ex.getMessage());
     }
 }
 ```
 
-All _Result_ classes have methods for mapping and flat mapping to the other _Result_ classes.
-
-Example of mapping from a _Result_ to a _BooleanResult_ by using the method `mapToBoolean`:
+All _Result_ classes have methods for mapping and flat mapping to the other _Result_ classes. Example of mapping from a _Result_ to a _BooleanResult_ by using the method `mapToBoolean`:
 
 ```java
 public BooleanResult<String> isOldEnough(String customerId) {
     return getCustomer(customerId)
-        .mapToBoolean(customer -> customer.getAge() >= 18)
+        .mapToBoolean(customer -> customer.getAge() >= 18) // Returns BooleanResult<String>
         .runIfFalse(() -> LOGGER.warn("Customer is underage"));
 }
 ```
@@ -235,17 +230,17 @@ If you want to extract the value from the Result-object without consuming, the m
 Example of `merge`:
 ```java
 public Status getCustomerStatus() {
-    getCustomer(id) // Returns Result<Customer, String>
+    return getCustomer(id) // Returns Result<Customer, String>
         .merge(
                 customer -> Status.CUSTOMER_EXISTS,
-                error -> Status.CUSTOMER_FETCH_ERROR
+                error -> Status.CUSTOMER_FETCH_ERROR);
 }
 ```
 
 There are also three argument versions of the `merge` method on _OptionalResult_ and _BooleanResult_. Example with _OptionalResult_:
 ```java
 public Status getCustomerStatus() {
-    getCustomer(id) // Returns OptionalResult<Customer, String>
+    return getCustomer(id) // Returns OptionalResult<Customer, String>
         .merge(
                 customer -> Status.CUSTOMER_EXISTS,
                 () -> Status.CUSTOMER_NOT_FOUND,
@@ -256,12 +251,12 @@ public Status getCustomerStatus() {
 Example with _BooleanResult_:
 ```java
 public Status getCustomerStatus() {
-    getCustomer(id) // Returns Result<Customer, String>
-            .mapToBoolean(customer -> customer.getAge() >= 18)
+    return getCustomer(id) // Returns Result<Customer, String>
+            .mapToBoolean(customer -> customer.getAge() >= 18) // Returns Booleanesult<String>
             .merge(
                       () -> Status.CUSTOMER_APPROVED,
                       () -> Status.CUSTOMER_UNDERAGE,
-                      error -> Status.CUSTOMER_FETCH_ERROR
+                      error -> Status.CUSTOMER_FETCH_ERROR);
 }
 ```
 
