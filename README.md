@@ -8,7 +8,7 @@ A Java result library helping you get rid of exceptions, enabling a more fluent 
 - [Usage](#usage)
   - [Creating a Result](#creating-a-result)
   - [Chaining](#chaining)
-  - [Additional Result Classes](#chaining)
+  - [Additional Result Classes](#additional-result-classes)
   - [Verifying the Value](#verifying-the-value)
   - [Extracting the Value](#extracting-the-value)
 - [API](#api)
@@ -37,7 +37,7 @@ The introduction of Optional was a great step forward for Java, but as a class i
 
 ### Creating a Result
 
-Make methods that can give an error return a `Result<T, E>` where T is the type of the return value when the method is successful, and E is the type of error value when the method is not successful.
+Make methods that can give an error return a `Result<T, E>` where T is the type of the return value when the result is in success state, and E is the type of error value when the result is in error state.
 
 ```java
 public Result<Customer, String> getCustomer(String id) {
@@ -57,7 +57,7 @@ Result<Customer, String> customerResult = getCustomer(id);
 
 ### Chaining
 
-However the full benefit of using the result library is more visible when using chaining and utilizing other methods that return Result values.
+However the full benefit of using the Fluent Result library is more visible when using chaining and utilizing other methods that return _Result_ values.
 
 Some other methods to use while chaining:
 ```java
@@ -81,42 +81,39 @@ public Result<BigDecimal, String> getBalance(String customerId, String accountId
 }
 ```
 
-In the above chain the methods `map`, `flatMap` and `consume` is invoked only if there is an actual success value in the Result, and not if an error were returned somewhere in the chain. The method `consumeError` is only invoked if an error is present.
+In the above chain the methods `map`, `flatMap` and `consume` are invoked only if the _Result_ is in success state and contains a success value, and not if an error were returned somewhere in the chain, giving a _Result_ in error state. The method `consumeError` is only invoked if error state.
 
 ### Additional Result Classes
 
-Some cases of Result value types frequently happen, like `Result<Optional<T>, E>`, `Result<Boolean, E>` and `Result<Void, E>`. For these frequent result types we provided the additional Result classes _OptionalResult_, _BooleanResult_ and _VoidResult_.
+Some cases of Result value types frequently happen, like `Result<Optional<T>, E>`, `Result<Boolean, E>` and `Result<Void, E>`. For these frequent result types the additional Result classes _OptionalResult_, _BooleanResult_ and _VoidResult_ are provided.
 
-These classes provide some additional methods relevant for their type, and remove method not relevant for their type. They create a better facade for some of the recurring patterns happening when using normal _Result_.
+These classes provide some additional methods relevant for their type, and remove methods not relevant for their type. They create a better facade for some of the recurring patterns happening when using normal _Result_.
 
-Comparing using `Result<Optional<T>, E>` and `OptionalResult<T, E>`. First with `Result<Optional<Customer>, E>`:
+Comparing using `Result<Optional<T>, E>` and `OptionalResult<T, E>`, first with `Result<Optional<Customer>, E>`:
 ```java
 public Result<Optional<Integer>, String> getAge(String customerId) {
-    // Returns Result<Optional<Customer>, String>
-    return getCustomer(customerId)
-        .runIfSuccess(maybeCustomer -> maybeCustomer.ifPresentOrElse(
+    return getCustomer(customerId) // Returns Result<Optional<Customer>, String>
+        .consume(maybeCustomer -> maybeCustomer.ifPresentOrElse(
                 customer -> LOGGER.info("Customer + " customer.getName() + " found"),
                 () -> LOGGER.warn("Customer not found")
         ))
         .map(maybeCustomer -> maybeCustomer.map(Customer::getAge);
 }
 ```
-With `OptionalResult<Customer, E>`:
+By using `OptionalResult<Customer, E>` the chain is more readable when methods like `consumeValue`, `runIfEmpty` and `mapValue` may be used:
 ```java
 public OptionalResult<Integer, String> getAge(String customerId) {
-    // Returns OptionalResult<Customer, String>
-    return getCustomer(customerId)
-        .runIfValue(customer -> LOGGER.info("Customer + " customer.getName() + " found"))
+    return getCustomer(customerId) // Returns OptionalResult<Customer, String>
+        .consumeValue(customer -> LOGGER.info("Customer + " customer.getName() + " found"))
         .runIfEmpty(() -> LOGGER.warn("Customer not found"))
         .mapValue(Customer::getAge);
 }
 ```
 
-Comparing using `Result<Boolean, E>` and `BooleanResult<E>`. First with `Result<Boolean, E>`:
+Comparing using `Result<Boolean, E>` and `BooleanResult<E>`, first with `Result<Boolean, E>`:
 ```java
 public boolean isOldEnough(String customerId) {
-    // Returns Result<Customer, String>
-    return getCustomer(customerId)
+    return getCustomer(customerId) // Returns Result<Customer, String>
         .map(Customer::getAge)
         .map(age -> age >= 18) // Returns Result<Boolean, String>
         .runIfSuccess(oldEnough -> {
@@ -130,16 +127,15 @@ public boolean isOldEnough(String customerId) {
         .orElse(false);
 }
 ```
-With `BooleanResult<E>`:
+By using `BooleanResult<E>` the chain is more readable when methods like `runIfTrue`, `runIfFalse` and `orElseFalse` may be used:
 ```java
 public boolean isOldEnough(String customerId) {
-    // Returns Result<Customer, String>
-    return getCustomer(customerId)
+    return getCustomer(customerId) // Returns Result<Customer, String>
         .map(Customer::getAge)
         .mapToBoolean(age -> age >= 18) // Returns BooleanResult<String>
         .runIfTrue(() -> LOGGER.info("Customer is old enough"))
         .runIfFalse(() -> LOGGER.warn("Customer is underage"))
-        .runIfError(errMsg -> LOGGER.warn("Error getting customer: " + errMsg))
+        .runIfError(() -> LOGGER.warn("Error getting customer"))
         .orElseFalse();
 }
 ```
@@ -149,14 +145,13 @@ _OptionalResult_ and _BooleanResult_ also have three argument versions of the `c
 The above example, modified to `runEither`:
 ```java
 public boolean isOldEnough(String customerId) {
-    // Returns Result<Customer, String>
-    return getCustomer(customerId)
+    return getCustomer(customerId) // Returns Result<Customer, String>
         .map(Customer::getAge)
         .mapToBoolean(age -> age >= 18) // Returns BooleanResult<String>
         .runEither(
-                () -> LOGGER.info("Customer is old enough")),
-                () -> LOGGER.warn("Customer is underage")),
-                errMsg -> LOGGER.warn("Error getting customer: " + errMsg))
+                () -> LOGGER.info("Customer is old enough"),
+                () -> LOGGER.warn("Customer is underage"),
+                () -> LOGGER.warn("Error getting customer"))
         .orElseFalse();
 }
 ```
@@ -196,8 +191,7 @@ returned _Result_ will contain the given error message.
 
 ```java
 public Result<Customer, String> getGrownUpCustomer(String customerId) {
-    // Returns Result<Customer, String>
-    return getCustomer(customerId)
+    return getCustomer(customerId) // Returns Result<Customer, String>
         .verify(
                 customer -> customer.getAge() >= 18,
                 () -> "Customer is not a grown up");
@@ -208,8 +202,7 @@ For _OptionalResult_ you may also verify the actual value if present. If the _Op
 
 ```java
 public Result<Customer, String> getGrownUpCustomer(String customerId) {
-    // Returns OptionalResult<Customer, String>
-    return getCustomer(customerId)
+    return getCustomer(customerId) // Returns OptionalResult<Customer, String>
         .verifyValue(
                 customer -> customer.getAge() >= 18,
                 () -> "Customer is not a grown up");
@@ -237,34 +230,33 @@ getCustomer(id).consumeEither(
     this::logAnError);
 ```
 
-If you want to extract the value from the Result-object without consuming the methods `orElse`, `orElseGet` and `orElseThrow` known from _Optional_. Also provided are a method `merge` which can be used for mapping both the success value and the error value to a single return value.
+If you want to extract the value from the Result-object without consuming, the methods `orElse`, `orElseGet` and `orElseThrow` known from _Optional_ may be used. Also provided are a method `merge` which can be used for mapping both the success value and the error value to a single return value.
 
 Example of `merge`:
-
 ```java
 public Status getCustomerStatus() {
-    // getCustomer returns Result<Customer, String>
-    getCustomer(id).merge(
-            customer -> Status.CUSTOMER_EXISTS,
-            error -> Status.CUSTOMER_FETCH_ERROR
+    getCustomer(id) // Returns Result<Customer, String>
+        .merge(
+                customer -> Status.CUSTOMER_EXISTS,
+                error -> Status.CUSTOMER_FETCH_ERROR
 }
 ```
 
-There are also three argument versions of the `merge` method on _OptionalResult_ and _BooleanResult_:
+There are also three argument versions of the `merge` method on _OptionalResult_ and _BooleanResult_. Example with _OptionalResult_:
 ```java
 public Status getCustomerStatus() {
-    // getCustomer returns OptionalResult<Customer, String>
-    getCustomer(id).merge(
-            customer -> Status.CUSTOMER_EXISTS,
-            () -> Status.CUSTOMER_NOT_FOUND,
-            error -> Status.CUSTOMER_FETCH_ERROR
+    getCustomer(id) // Returns OptionalResult<Customer, String>
+        .merge(
+                customer -> Status.CUSTOMER_EXISTS,
+                () -> Status.CUSTOMER_NOT_FOUND,
+                error -> Status.CUSTOMER_FETCH_ERROR);
 }
 ```
 
+Example with _BooleanResult_:
 ```java
 public Status getCustomerStatus() {
-    // getCustomer returns Result<Customer, String>
-    getCustomer(id)
+    getCustomer(id) // Returns Result<Customer, String>
             .mapToBoolean(customer -> customer.getAge() >= 18)
             .merge(
                       () -> Status.CUSTOMER_APPROVED,
