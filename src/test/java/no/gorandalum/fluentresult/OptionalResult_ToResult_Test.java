@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
 
-class OptionalResult_Flatten_Test {
+class OptionalResult_ToResult_Test {
 
     @Test
-    void flatten_success_shouldCreateResultContaining() {
+    void toResult_success_shouldCreateResultContaining() {
         Result<String, String> result = OptionalResult.<String, String>success("Success")
-                .flatten(() -> "Error");
+                .toResult(() -> "Error");
         result.consumeEither(
                 val -> assertThat(val).isEqualTo("Success"),
                 err -> fail("Should not be error")
@@ -18,9 +18,9 @@ class OptionalResult_Flatten_Test {
     }
 
     @Test
-    void flatten_empty_shouldRunErrorSupplier() {
+    void toResult_empty_shouldRunErrorSupplier() {
         Result<String, String> result = OptionalResult.<String, String>empty()
-                .flatten(() -> "Error");
+                .toResult(() -> "Error");
         result.consumeEither(
                 val -> fail("Should not be success"),
                 err -> assertThat(err).isEqualTo("Error")
@@ -28,9 +28,9 @@ class OptionalResult_Flatten_Test {
     }
 
     @Test
-    void flatten_error_shouldKeepError() {
+    void toResult_error_shouldKeepError() {
         Result<String, String> result = OptionalResult.<String, String>error("OriginalError")
-                .flatten(() -> "Error");
+                .toResult(() -> "Error");
         result.consumeEither(
                 val -> fail("Should not be success"),
                 err -> assertThat(err).isEqualTo("OriginalError")

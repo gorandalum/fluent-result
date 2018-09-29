@@ -355,7 +355,7 @@ public Status getCustomerStatus() {
 [`orElseThrow(Function<E, X> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#orElseThrow(java.util.function.Function))<br/>
 [`valueOrElseThrow(Supplier<X> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#valueOrElseThrow(java.util.function.Supplier))<br/>
 
-[`flatten(Supplier<E> errorSupplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatten(java.util.function.Supplier))<br/>
+[`toResult(Supplier<E> errorSupplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#toResult(java.util.function.Supplier))<br/>
 [`toVoidResult()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#toVoidResult())
     
 ### [BooleanResult](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html)

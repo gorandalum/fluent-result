@@ -830,10 +830,13 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
-     * Flattens this {@code OptionalResult} to a {@code Result}. If this
-     * {@code OptionalResult} is empty, then the returned {@code Result} will be
-     * in error state, containing the error value supplied by the given error
-     * supplier.
+     * Transforms this {@code OptionalResult} to a {@code Result}. If in
+     * non-empty succes state, the {@code Result} will be in success state
+     * containing the success value of this {@code OptionalResult}. If empty
+     * success state, the {@code Result} will be in error state, containing the
+     * error value supplied by the given error supplier. If in error state, the
+     * {@code Result} will be in error state containing the error value of this
+     * {@code OptionalResult}.
      *
      * @param errorSupplier supplier providing the error value if empty success
      * state
@@ -844,7 +847,7 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * @throws NullPointerException if the given supplier is {@code null} or
      * returns {@code null}
      */
-    public Result<T, E> flatten(Supplier<? extends E> errorSupplier) {
+    public Result<T, E> toResult(Supplier<? extends E> errorSupplier) {
         Objects.requireNonNull(errorSupplier);
         return merge(Result::success, () -> Result.error(errorSupplier.get()), Result::error);
     }
