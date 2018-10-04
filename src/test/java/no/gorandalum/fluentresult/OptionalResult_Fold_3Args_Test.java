@@ -6,74 +6,74 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
 
-class OptionalResult_Merge_3Args_Test {
+class OptionalResult_Fold_3Args_Test {
 
     @Test
-    void merge_success_shouldGiveSuccessValueFunctionResult() {
-        Integer merged = OptionalResult.success("Success").merge(
+    void fold_success_shouldGiveSuccessValueFunctionResult() {
+        Integer folded = OptionalResult.success("Success").fold(
                 String::length,
                 () -> fail("Should not run"),
                 err -> fail("Should not run"));
-        assertThat(merged).isEqualTo(7);
+        assertThat(folded).isEqualTo(7);
     }
 
     @Test
-    void merge_empty_shouldGiveEmptySupplierResult() {
-        Integer merged = OptionalResult.empty().merge(
+    void fold_empty_shouldGiveEmptySupplierResult() {
+        Integer folded = OptionalResult.empty().fold(
                 val -> fail("Should not run"),
                 () -> 6,
                 err -> fail("Should not run"));
-        assertThat(merged).isEqualTo(6);
+        assertThat(folded).isEqualTo(6);
     }
 
     @Test
-    void merge_error_shouldGiveErrorValueFunctionResult() {
-        Integer merged = OptionalResult.error("Error").merge(
+    void fold_error_shouldGiveErrorValueFunctionResult() {
+        Integer folded = OptionalResult.error("Error").fold(
                 val -> fail("Should not run"),
                 () -> fail("Should not run"),
                 err -> 5);
-        assertThat(merged).isEqualTo(5);
+        assertThat(folded).isEqualTo(5);
     }
 
     @Test
-    void merge_success_nullValueFunctionGivesNPE() {
+    void fold_success_nullValueFunctionGivesNPE() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
-        assertThatThrownBy(() -> result.merge(null, () -> 6, err -> 5))
+        assertThatThrownBy(() -> result.fold(null, () -> 6, err -> 5))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    void merge_success_nullEmptySupplierGivesNPE() {
+    void fold_success_nullEmptySupplierGivesNPE() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
-        assertThatThrownBy(() -> result.merge(val -> 7, null, err -> 5))
+        assertThatThrownBy(() -> result.fold(val -> 7, null, err -> 5))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    void merge_success_nullErrorFunctionGivesNPE() {
+    void fold_success_nullErrorFunctionGivesNPE() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
-        assertThatThrownBy(() -> result.merge(val -> 7, () -> 6, null))
+        assertThatThrownBy(() -> result.fold(val -> 7, () -> 6, null))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    void merge_success_canReturnNull() {
+    void fold_success_canReturnNull() {
         OptionalResult<String, Integer> result = OptionalResult.success("Success");
-        Integer merged = result.merge(val -> null, () -> 6, err -> 5);
-        assertThat(merged).isNull();
+        Integer folded = result.fold(val -> null, () -> 6, err -> 5);
+        assertThat(folded).isNull();
     }
 
     @Test
-    void merge_empty_canReturnNull() {
+    void fold_empty_canReturnNull() {
         OptionalResult<String, Integer> result = OptionalResult.empty();
-        Integer merged = result.merge(val -> 7, () -> null, err -> 5);
-        assertThat(merged).isNull();
+        Integer folded = result.fold(val -> 7, () -> null, err -> 5);
+        assertThat(folded).isNull();
     }
 
     @Test
-    void merge_error_canReturnNull() {
+    void fold_error_canReturnNull() {
         OptionalResult<String, Integer> result = OptionalResult.error(7);
-        Integer merged = result.merge(val -> 7, () -> 6, err -> null);
-        assertThat(merged).isNull();
+        Integer folded = result.fold(val -> 7, () -> 6, err -> null);
+        assertThat(folded).isNull();
     }
 }

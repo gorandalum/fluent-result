@@ -138,7 +138,7 @@ public boolean isOldEnough(String customerId) {
 }
 ```
 
-_OptionalResult_ and _BooleanResult_ also have three argument versions of the `consumeEither`, `runEither` and `merge` methods.
+_OptionalResult_ and _BooleanResult_ also have three argument versions of the `consumeEither`, `runEither` and `fold` methods.
 
 The above example, modified to `runEither`:
 ```java
@@ -225,23 +225,23 @@ getCustomer(id).consumeEither(
     this::logAnError);
 ```
 
-If you want to extract the value from the Result-object without consuming, the methods `orElse`, `orElseGet` and `orElseThrow` known from _Optional_ may be used. Also provided are a method `merge` which can be used for mapping both the success value and the error value to a single return value.
+If you want to extract the value from the Result-object without consuming, the methods `orElse`, `orElseGet` and `orElseThrow` known from _Optional_ may be used. Also provided are a method `fold` which can be used for mapping both the success value and the error value to a single return value.
 
-Example of `merge`:
+Example of `fold`:
 ```java
 public Status getCustomerStatus() {
     return getCustomer(id) // Returns Result<Customer, String>
-        .merge(
+        .fold(
                 customer -> Status.CUSTOMER_EXISTS,
                 error -> Status.CUSTOMER_FETCH_ERROR);
 }
 ```
 
-There are also three argument versions of the `merge` method on _OptionalResult_ and _BooleanResult_. Example with _OptionalResult_:
+There are also three argument versions of the `fold` method on _OptionalResult_ and _BooleanResult_. Example with _OptionalResult_:
 ```java
 public Status getCustomerStatus() {
     return getCustomer(id) // Returns OptionalResult<Customer, String>
-        .merge(
+        .fold(
                 customer -> Status.CUSTOMER_EXISTS,
                 () -> Status.CUSTOMER_NOT_FOUND,
                 error -> Status.CUSTOMER_FETCH_ERROR);
@@ -253,7 +253,7 @@ Example with _BooleanResult_:
 public Status getCustomerStatus() {
     return getCustomer(id) // Returns Result<Customer, String>
             .mapToBoolean(customer -> customer.getAge() >= 18) // Returns Booleanesult<String>
-            .merge(
+            .fold(
                       () -> Status.CUSTOMER_APPROVED,
                       () -> Status.CUSTOMER_UNDERAGE,
                       error -> Status.CUSTOMER_FETCH_ERROR);
@@ -293,7 +293,7 @@ public Status getCustomerStatus() {
 
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<T> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
 
-[`merge(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<T, N> valueFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#merge(java.util.function.Function,java.util.function.Function))<br/>
+[`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<T, N> valueFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#fold(java.util.function.Function,java.util.function.Function))<br/>
 [`orElse(T other)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#orElse(T))<br/>
 [`orElseGet(Function<E, T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#orElseGet(java.util.function.Function))<br/>
 [`orElseThrow(Function<E, X> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#orElseThrow(java.util.function.Function))<br/>
@@ -346,8 +346,8 @@ public Status getCustomerStatus() {
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<Optional<T>> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
 [`verifyValue(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<T> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verifyValue(java.util.function.Predicate,java.util.function.Supplier))<br/>
 
-[`merge(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<Optional<T>, N> successFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#merge(java.util.function.Function,java.util.function.Function))<br/>
-[`merge(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<T, N> valueFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> emptySupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#merge(java.util.function.Function,java.util.function.Supplier,java.util.function.Function))<br/>
+[`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<Optional<T>, N> successFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#fold(java.util.function.Function,java.util.function.Function))<br/>
+[`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<T, N> valueFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> emptySupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#fold(java.util.function.Function,java.util.function.Supplier,java.util.function.Function))<br/>
 [`orElse(Optional<T> other)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#orElse(java.util.Optional))<br/>
 [`valueOrElse(T other)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#valueOrElse(T))<br/>
 [`orElseGet(Function<E, Optional<T>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#orElseGet(java.util.function.Function))<br/>
@@ -394,8 +394,8 @@ public Status getCustomerStatus() {
 
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<Boolean> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
 
-[`merge(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<Boolean, N> successFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#merge(java.util.function.Function,java.util.function.Function))<br/>
-[`merge(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> trueSupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> falseSupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#merge(java.util.function.Supplier,java.util.function.Supplier,java.util.function.Function))<br/>
+[`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<Boolean, N> successFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#fold(java.util.function.Function,java.util.function.Function))<br/>
+[`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> trueSupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> falseSupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#fold(java.util.function.Supplier,java.util.function.Supplier,java.util.function.Function))<br/>
 [`orElse(Boolean other)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#orElse(java.lang.Boolean))<br/>
 [`orElseTrue()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#orElseTrue())<br/>
 [`orElseFalse()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#orElseFalse())<br/>
@@ -433,7 +433,7 @@ public Status getCustomerStatus() {
 [`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable successRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#runEither(java.lang.Runnable,java.lang.Runnable))<br/>
 [`run(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#run(java.lang.Runnable))<br/>
 
-[`merge(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> valueSupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#merge(java.util.function.Supplier,java.util.function.Function))<br/>
+[`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> valueSupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#fold(java.util.function.Supplier,java.util.function.Function))<br/>
 [`orElseThrow(Function<E, X> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#orElseThrow(java.util.function.Function))<br/>
 
 [`toOptionalResult()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#toOptionalResult())<br/>

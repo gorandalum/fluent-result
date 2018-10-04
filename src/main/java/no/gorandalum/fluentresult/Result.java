@@ -324,7 +324,7 @@ public final class Result<T, E> extends BaseResult<T, E> {
     }
 
     /**
-     * Retrieve a value from this {@code Result} by merging the states. If in
+     * Retrieve a value from this {@code Result} by folding the states. If in
      * success state, return the value of applying the value function to the
      * success value. If in error state, return the value of applying the error
      * function to the error value.
@@ -334,14 +334,14 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * if success state, may return {@code null}
      * @param errorFunction the mapping function to apply to the error value, if
      * error state, may return {@code null}
-     * @return the merged value mapped from either the success value or error
+     * @return the folded value mapped from either the success value or error
      * value, may be {@code null}
      * @throws NullPointerException if one of the given functions is
      * {@code null}
      */
-    public <N> N merge(Function<? super T, ? extends N> valueFunction,
-                       Function<? super E, ? extends N> errorFunction) {
-        return Implementations.merge(valueFunction, errorFunction, this);
+    public <N> N fold(Function<? super T, ? extends N> valueFunction,
+                      Function<? super E, ? extends N> errorFunction) {
+        return Implementations.fold(valueFunction, errorFunction, this);
     }
 
     /**

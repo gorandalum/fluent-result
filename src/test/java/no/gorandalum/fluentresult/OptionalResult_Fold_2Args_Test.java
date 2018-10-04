@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class OptionalResult_Merge_2Args_Test {
+class OptionalResult_Fold_2Args_Test {
 
     @Test
-    void merge_success_shouldGiveSuccessValueFunctionResult() {
+    void fold_success_shouldGiveSuccessValueFunctionResult() {
         OptionalResult<String, Integer> result = OptionalResult.success("Success");
-        Integer merged = result.merge(
+        Integer folded = result.fold(
                 maybeVal -> maybeVal.map(String::length).orElse(3),
                 err -> err);
-        assertThat(merged).isEqualTo(7);
+        assertThat(folded).isEqualTo(7);
     }
 }

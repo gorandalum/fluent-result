@@ -483,7 +483,7 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
     }
 
     /**
-     * Retrieve a value from this {@code BooleanResult} by merging the states.
+     * Retrieve a value from this {@code BooleanResult} by folding the states.
      * If in success state, return the value of applying the value function to
      * the boolean success value. If in error state, return the value of
      * applying the error function to the error value.
@@ -493,18 +493,18 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      * value, if success state, may return {@code null}
      * @param errorFunction the mapping function to apply to the error value, if
      * error state, may return {@code null}
-     * @return the merged value mapped from either the success value or error
+     * @return the folded value mapped from either the success value or error
      * value, may be {@code null}
      * @throws NullPointerException if one of the given functions is
      * {@code null}
      */
-    public <N> N merge(Function<Boolean, ? extends N> valueFunction,
-                       Function<? super E, ? extends N> errorFunction) {
-        return Implementations.merge(valueFunction, errorFunction, this);
+    public <N> N fold(Function<Boolean, ? extends N> valueFunction,
+                      Function<? super E, ? extends N> errorFunction) {
+        return Implementations.fold(valueFunction, errorFunction, this);
     }
 
     /**
-     * Retrieve a value from this {@code BooleanResult} by merging the states.
+     * Retrieve a value from this {@code BooleanResult} by folding the states.
      * If in success state with a success value of {@code true}, return the
      * value provided by the true-supplier. If in success state with a success
      * value of {@code false}, return the value provided by the false-supplier.
@@ -518,18 +518,18 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      * of {@code false}, may return {@code null}
      * @param errorFunction the mapping function to apply to the error value, if
      * error state, may return {@code null}
-     * @return the merged value mapped from either the success value or error
+     * @return the folded value mapped from either the success value or error
      * value, may be {@code null}
      * @throws NullPointerException if one of the given functions or the
      * supplier is {@code null}
      */
-    public <N> N merge(Supplier<? extends N> trueSupplier,
-                       Supplier<? extends N> falseSupplier,
-                       Function<? super E, ? extends N> errorFunction) {
+    public <N> N fold(Supplier<? extends N> trueSupplier,
+                      Supplier<? extends N> falseSupplier,
+                      Function<? super E, ? extends N> errorFunction) {
         Objects.requireNonNull(trueSupplier);
         Objects.requireNonNull(falseSupplier);
         Objects.requireNonNull(errorFunction);
-        return Implementations.merge(
+        return Implementations.fold(
                 val -> val ? trueSupplier.get() : falseSupplier.get(),
                 errorFunction,
                 this);

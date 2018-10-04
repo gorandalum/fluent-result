@@ -684,7 +684,7 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
-     * Retrieve a value from this {@code OptionalResult} by merging the states.
+     * Retrieve a value from this {@code OptionalResult} by folding the states.
      * If in success state, return the value of applying the success function to
      * the optional success value. If in error state, return the value of
      * applying the error function to the error value.
@@ -694,18 +694,18 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * success value, if success state, may return {@code null}
      * @param errorFunction the mapping function to apply to the error value, if
      * error state, may return {@code null}
-     * @return the merged value mapped from either the success value or error
+     * @return the folded value mapped from either the success value or error
      * value, may be {@code null}
      * @throws NullPointerException if one of the given functions is
      * {@code null}
      */
-    public <N> N merge(Function<Optional<T>, ? extends N> successFunction,
-                       Function<? super E, ? extends N> errorFunction) {
-        return Implementations.merge(successFunction, errorFunction, this);
+    public <N> N fold(Function<Optional<T>, ? extends N> successFunction,
+                      Function<? super E, ? extends N> errorFunction) {
+        return Implementations.fold(successFunction, errorFunction, this);
     }
 
     /**
-     * Retrieve a value from this {@code OptionalResult} by merging the states.
+     * Retrieve a value from this {@code OptionalResult} by folding the states.
      * If in success state with a success value, return the value of applying
      * the value function to the success value. If empty, return the value
      * provided by the empty-supplier. If in error state, return the value of
@@ -718,18 +718,18 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * return {@code null}
      * @param errorFunction the mapping function to apply to the error value, if
      * error state, may return {@code null}
-     * @return the merged value mapped from either the success value or error
+     * @return the folded value mapped from either the success value or error
      * value, may be {@code null}
      * @throws NullPointerException if one of the given functions or the
      * supplier is {@code null}
      */
-    public <N> N merge(Function<? super T, ? extends N> valueFunction,
-                       Supplier<? extends N> emptySupplier,
-                       Function<? super E, ? extends N> errorFunction) {
+    public <N> N fold(Function<? super T, ? extends N> valueFunction,
+                      Supplier<? extends N> emptySupplier,
+                      Function<? super E, ? extends N> errorFunction) {
         Objects.requireNonNull(valueFunction);
         Objects.requireNonNull(emptySupplier);
         Objects.requireNonNull(errorFunction);
-        return Implementations.merge(
+        return Implementations.fold(
                 maybeVal -> maybeVal.isPresent() ?
                         valueFunction.apply(maybeVal.get()) :
                         emptySupplier.get(),
@@ -849,7 +849,7 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      */
     public Result<T, E> toResult(Supplier<? extends E> errorSupplier) {
         Objects.requireNonNull(errorSupplier);
-        return merge(Result::success, () -> Result.error(errorSupplier.get()), Result::error);
+        return fold(Result::success, () -> Result.error(errorSupplier.get()), Result::error);
     }
 
     /**

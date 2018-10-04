@@ -4,14 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class BooleanResult_Merge_2Args_Test {
+class BooleanResult_Fold_2Args_Test {
 
     @Test
-    void merge_success_shouldGiveSuccessValueFunctionResult() {
+    void fold_success_shouldGiveSuccessValueFunctionResult() {
         BooleanResult<Integer> result = BooleanResult.success(true);
-        Integer merged = result.merge(
+        Integer folded = result.fold(
                 val -> val ? 7 : 3,
                 err -> err);
-        assertThat(merged).isEqualTo(7);
+        assertThat(folded).isEqualTo(7);
     }
 }

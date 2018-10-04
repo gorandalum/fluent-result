@@ -315,7 +315,7 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
     }
 
     /**
-     * Retrieve a value from this {@code VoidResult} by merging the states. If
+     * Retrieve a value from this {@code VoidResult} by folding the states. If
      * in success state, return the value provided by the value-supplier. If in
      * error state, return the value of applying the error-function to the error
      * value.
@@ -325,16 +325,16 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
      * return {@code null}
      * @param errorFunction the mapping function to apply to the error value, if
      * error state, may return {@code null}
-     * @return the merged value mapped from either the success value or error
+     * @return the folded value mapped from either the success value or error
      * value, may be {@code null}
      * @throws NullPointerException if either the given supplier or function is
      * {@code null}
      */
-    public <N> N merge(Supplier<? extends N> valueSupplier,
-                       Function<? super E, ? extends N> errorFunction) {
+    public <N> N fold(Supplier<? extends N> valueSupplier,
+                      Function<? super E, ? extends N> errorFunction) {
         Objects.requireNonNull(valueSupplier);
         Objects.requireNonNull(errorFunction);
-        return Implementations.merge(
+        return Implementations.fold(
                 val -> valueSupplier.get(),
                 errorFunction,
                 this);

@@ -29,7 +29,7 @@ final class Implementations {
         throw function.apply(instance.error());
     }
 
-    static <T, E, N, R extends BaseResult<T, E>> N merge(
+    static <T, E, N, R extends BaseResult<T, E>> N fold(
             Function<? super T, ? extends N> valueFunction,
             Function<? super E, ? extends N> errorFunction,
             R instance) {
