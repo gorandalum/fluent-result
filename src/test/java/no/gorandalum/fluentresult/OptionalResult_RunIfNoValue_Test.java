@@ -7,40 +7,42 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 
-class OptionalResult_RunIfEmpty_Test {
+class OptionalResult_RunIfNoValue_Test {
 
     @Test
-    void runIfEmpty_success_consumerShouldNotRun() {
-        List<String> resultList = new ArrayList<>();
+    void runIfNoValue_success_runnableShouldNotRun() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
-        result.runIfEmpty(() -> resultList.add("Ran"));
-        assertThat(resultList).isEmpty();
+        result.runIfNoValue(() -> fail("Should not be run"));
     }
 
     @Test
-    void runIfEmpty_empty_consumerShouldNotRun() {
+    void runIfNoValue_empty_runnableShouldRun() {
         List<String> resultList = new ArrayList<>();
         OptionalResult<String, String> result = OptionalResult.empty();
         OptionalResult<String, String> finalResult =
-                result.runIfEmpty(() -> resultList.add("Ran"));
+                result.runIfNoValue(() -> resultList.add("Ran"));
         assertThat(resultList.size()).isOne();
         assertThat(resultList.get(0)).isEqualTo("Ran");
         assertThat(finalResult).isNotNull();
     }
 
     @Test
-    void runIfEmpty_error_consumerShouldNotRun() {
+    void runIfNoValue_error_runnableShouldNotRun() {
         List<String> resultList = new ArrayList<>();
         OptionalResult<String, String> result = OptionalResult.error("Error");
-        result.runIfEmpty(() -> resultList.add("Ran"));
-        assertThat(resultList).isEmpty();
+        OptionalResult<String, String> finalResult =
+                result.runIfNoValue(() -> resultList.add("Ran"));
+        assertThat(resultList.size()).isOne();
+        assertThat(resultList.get(0)).isEqualTo("Ran");
+        assertThat(finalResult).isNotNull();
     }
 
     @Test
-    void runIfEmpty_success_nullRunnableGivesNPE() {
+    void runIfNoValue_success_nullRunnableGivesNPE() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
-        assertThatThrownBy(() -> result.runIfEmpty(null))
+        assertThatThrownBy(() -> result.runIfNoValue(null))
                 .isInstanceOf(NullPointerException.class);
     }
 }

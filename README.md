@@ -61,11 +61,11 @@ However the full benefit of using the Fluent Result library is more visible when
 
 Some other methods to use while chaining:
 ```java
-public Result<Account, String> findAccount(List<Account> accounts, String accountId)
+public Result<Account, String> findAccount(List<Account> accounts, String accountId) {...}
 
-public void logAccountInfo(Account account)
+public void logAccountInfo(Account account) {...}
 
-public void logError(String customerId, String accountId, String errorMsg)
+public void logError(String customerId, String accountId, String errorMsg) {...}
 ```
 
 Now the above methods can be called by chaining the calls.
@@ -337,6 +337,7 @@ public Status getCustomerStatus() {
 
 [`runIfSuccess(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfSuccess(java.lang.Runnable))<br/>
 [`runIfValue(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfValue(java.lang.Runnable))<br/>
+[`runIfNoValue(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfNoValue(java.lang.Runnable))<br/>
 [`runIfEmpty(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfEmpty(java.lang.Runnable))<br/>
 [`runIfError(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfError(java.lang.Runnable))<br/>
 [`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable successRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runEither(java.lang.Runnable,java.lang.Runnable))<br/>

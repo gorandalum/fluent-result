@@ -554,6 +554,19 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
+     * If in empty success state or error state, runs the given runnable,
+     * otherwise does nothing.
+     *
+     * @param runnable the runnable to run if empty success state or error state
+     * @return the original {@code OptionalResult} unaltered
+     * @throws NullPointerException if the given runnable is {@code null}
+     */
+    public OptionalResult<T, E> runIfNoValue(Runnable runnable) {
+        Objects.requireNonNull(runnable);
+        return runIfEmpty(runnable).runIfError(runnable);
+    }
+
+    /**
      * If in empty success state with no success value, runs the given runnable,
      * otherwise does nothing.
      *
