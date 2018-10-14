@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.com/gorandalum/fluent-result.svg?branch=master)](https://travis-ci.com/gorandalum/fluent-result)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Maven Central](https://img.shields.io/maven-central/v/no.gorandalum/fluent-result.svg)](https://mvnrepository.com/artifact/no.gorandalum/fluent-result)
 
 # Fluent Result
 
