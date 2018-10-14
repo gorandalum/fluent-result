@@ -483,6 +483,28 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
     }
 
     /**
+     * If in success state, verifies the success value of this
+     * {@code BooleanResult} by mapping it to a {@code VoidResult}. If the
+     * returned {@code VoidResult} is in error state, a new
+     * {@code BooleanResult} is returned containing the error value of the
+     * {@code VoidResult}. If the {@code VoidResult} is in success state, or the
+     * {@code BooleanResult} already was in error state, the original
+     * {@code BooleanResult} is returned unaltered.
+     *
+     * @param function the function applied to the success value, if success
+     * state
+     * @return the original {@code BooleanResult} unaltered, unless the
+     * {@code VoidResult} returned by the mapping function is in error state,
+     * then a new {@code BooleanResult} in error state is returned containing
+     * the error value from the {@code VoidResult}
+     * @throws NullPointerException if the given function is {@code null} or
+     * returns {@code null}
+     */
+    public BooleanResult<E> verify(Function<Boolean, ? extends VoidResult<? extends E>> function) {
+        return Implementations.verify(function, BooleanResult::error, this);
+    }
+
+    /**
      * Retrieve a value from this {@code BooleanResult} by folding the states.
      * If in success state, return the value of applying the value function to
      * the boolean success value. If in error state, return the value of

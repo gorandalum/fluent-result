@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
-class OptionalResult_VerifyValue_Test {
+class OptionalResult_VerifyValue_VoidResult_Test {
 
     @Test
-    void verifyValue_success_valueVerifiedTrue() {
+    void verifyValue_voidResult_success_shouldKeepSuccessValueWhenVoidResultSuccess() {
         OptionalResult<String, String> result =
                 OptionalResult.<String, String>success("Success")
-                        .verifyValue(val -> val.length() == 7, () -> "Error");
+                        .verifyValue(val -> VoidResult.success());
         result.consumeEither(
                 val -> assertThat(val).isEqualTo("Success"),
                 () -> fail("Should not be empty"),
@@ -18,10 +18,10 @@ class OptionalResult_VerifyValue_Test {
     }
 
     @Test
-    void verifyValue_success_valueVerifiedFalse() {
+    void verifyValue_voidResult_success_shouldChangeToErrorWhenVoidResultError() {
         OptionalResult<String, String> result =
                 OptionalResult.<String, String>success("Success")
-                        .verifyValue(val -> val.length() == 5, () -> "Error");
+                        .verifyValue(val -> VoidResult.error("Error"));
         result.consumeEither(
                 val -> fail("Should not have value"),
                 () -> fail("Should not be empty"),
@@ -29,10 +29,10 @@ class OptionalResult_VerifyValue_Test {
     }
 
     @Test
-    void verifyValue_empty_shouldRemainEmpty() {
+    void verifyValue_voidResult_empty_shouldRemainEmtpy() {
         OptionalResult<String, String> result =
                 OptionalResult.<String, String>empty()
-                        .verifyValue(val -> val.length() == 5, () -> "Error");
+                        .verifyValue(val -> fail("Should not run"));
         result.consumeEither(
                 val -> fail("Should not have value"),
                 () -> {},
@@ -40,10 +40,10 @@ class OptionalResult_VerifyValue_Test {
     }
 
     @Test
-    void verifyValue_error_shouldKeepOriginalError() {
+    void verifyValue_voidResult_error_shouldKeepOriginalError() {
         OptionalResult<String, String> result =
                 OptionalResult.<String, String>error("OriginalError")
-                        .verifyValue(val -> val.length() == 5, () -> "Error");
+                        .verifyValue(val -> fail("Should not run"));
         result.consumeEither(
                 val -> fail("Should not have value"),
                 () -> fail("Should not be empty"),
@@ -51,34 +51,16 @@ class OptionalResult_VerifyValue_Test {
     }
 
     @Test
-    void verifyValue_empty_shouldNotRunVerificatorWhenEmpty() {
-        OptionalResult.empty().verifyValue(
-                val -> {
-                    throw new RuntimeException();
-                },
-                () -> "Error");
-    }
-
-    @Test
-    void verifyValue_error_shouldNotRunVerificatorWhenError() {
-        OptionalResult.error("OriginalError").verifyValue(
-                val -> {
-                    throw new RuntimeException();
-                },
-                () -> "Error");
-    }
-
-    @Test
-    void verifyValue_success_nullVerificatorGivesNPE() {
+    void verifyValue_voidResult_success_nullFunctionGivesNPE() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
-        assertThatThrownBy(() -> result.verifyValue(null, () -> "ValidationError"))
+        assertThatThrownBy(() -> result.verifyValue(null))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    void verify_success_nullErrorSupplierGivesNPE() {
+    void verify_success_functionReturnsNullGivesNPE() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
-        assertThatThrownBy(() -> result.verifyValue(val -> true, null))
+        assertThatThrownBy(() -> result.verifyValue(val -> null))
                 .isInstanceOf(NullPointerException.class);
     }
 }

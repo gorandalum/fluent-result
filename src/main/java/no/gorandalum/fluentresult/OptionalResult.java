@@ -668,6 +668,29 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
+     * If in success state, verifies the success value of this
+     * {@code OptionalResult} by mapping it to a {@code VoidResult}. If the
+     * returned {@code VoidResult} is in error state, a new
+     * {@code OptionalResult} is returned containing the error value of the
+     * {@code VoidResult}. If the {@code VoidResult} is in success state, or the
+     * {@code OptionalResult} already was in error state, the original
+     * {@code OptionalResult} is returned unaltered.
+     *
+     * @param function the function applied to the success value, if success
+     * state
+     * @return the original {@code OptionalResult} unaltered, unless the
+     * {@code VoidResult} returned by the mapping function is in error state,
+     * then a new {@code OptionalResult} in error state is returned containing
+     * the error value from the {@code VoidResult}
+     * @throws NullPointerException if the given function is {@code null} or
+     * returns {@code null}
+     */
+    public OptionalResult<T, E> verify(
+            Function<Optional<T>, ? extends VoidResult<? extends E>> function) {
+        return Implementations.verify(function, OptionalResult::error, this);
+    }
+
+    /**
      * If in success state with a success value, verifies the success value of
      * this {@code OptionalResult} by testing it with the given predicate. If
      * the predicate evaluates to false, a new {@code OptionalResult} is returned
@@ -694,6 +717,36 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
                 errorSupplier,
                 OptionalResult::error,
                 this);
+    }
+
+    /**
+     * If in non-empty success state, verifies the success value of this
+     * {@code OptionalResult} by mapping it to a {@code VoidResult}. If the
+     * returned {@code VoidResult} is in error state, a new
+     * {@code OptionalResult} is returned containing the error value of the
+     * {@code VoidResult}. If the {@code VoidResult} is in success state, or the
+     * {@code OptionalResult} already was empty or in error state, the original
+     * {@code OptionalResult} is returned unaltered.
+     *
+     * @param function the function applied to the success value, if non-empty
+     * success state
+     * @return the original {@code OptionalResult} unaltered, unless the
+     * {@code VoidResult} returned by the mapping function is in error state,
+     * then a new {@code OptionalResult} in error state is returned containing
+     * the error value from the {@code VoidResult}
+     * @throws NullPointerException if the given function is {@code null} or
+     * returns {@code null}
+     */
+    public OptionalResult<T, E> verifyValue(
+            Function<? super T, ? extends VoidResult<? extends E>> function) {
+        @SuppressWarnings("unchecked")
+        OptionalResult<T, E> result = Implementations.verify(
+                maybeValue -> maybeValue
+                        .map(val -> (VoidResult<E>) Objects.requireNonNull(function.apply(val)))
+                        .orElseGet(VoidResult::success),
+                OptionalResult::error,
+                this);
+        return result;
     }
 
     /**

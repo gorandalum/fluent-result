@@ -324,6 +324,27 @@ public final class Result<T, E> extends BaseResult<T, E> {
     }
 
     /**
+     * If in success state, verifies the success value of this {@code Result} by
+     * mapping it to a {@code VoidResult}. If the returned {@code VoidResult} is
+     * in error state, a new {@code Result} is returned containing the error
+     * value of the {@code VoidResult}. If the {@code VoidResult} is in success
+     * state, or the {@code Result} already was in error state, the original
+     * {@code Result} is returned unaltered.
+     *
+     * @param function the function applied to the success value, if success
+     * state
+     * @return the original {@code Result} unaltered, unless the
+     * {@code VoidResult} returned by the mapping function is in error state,
+     * then a new {@code Result} in error state is returned containing the error
+     * value from the {@code VoidResult}
+     * @throws NullPointerException if the given function is {@code null} or
+     * returns {@code null}
+     */
+    public Result<T, E> verify(Function<? super T, ? extends VoidResult<? extends E>> function) {
+        return Implementations.verify(function, Result::error, this);
+    }
+
+    /**
      * Retrieve a value from this {@code Result} by folding the states. If in
      * success state, return the value of applying the value function to the
      * success value. If in error state, return the value of applying the error

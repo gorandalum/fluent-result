@@ -181,8 +181,27 @@ public BooleanResult<String> isOldEnough(String customerId) {
 
 The method `verify` can be used for verifying the value of the _Result_, and if the verification fails the returned _Result_ will contain an error value.
 
-Example of verifying the age of a customer. If the customer is under 18 then the
-returned _Result_ will contain the given error message.
+There are two methods for verifying the result. The first method takes a single function mapping the success value to a _VoidResult_. The other method takes two arguments, a predicate taking in the success value, and an error supplier providing the value if the predicate evaluates to false.
+
+Example of verifying the age of a customer by using a method which returns _VoidResult_. If the customer is under 18 then the returned _Result_ will contain the error message from the _VoidResult_.
+
+```java
+public Result<Customer, String> getGrownUpCustomer(String customerId) {
+    return getCustomer(customerId) // Returns Result<Customer, String>
+        .verify(this::isCustomerGrownUp);
+}
+
+private VoidResult<String> isCustomerGrownUp(Customer customer) {
+    if (customer.getAge() >= 18) {
+        return VoidResult.success();
+    }    
+    return VoidResult.error("Customer is not a grown up");
+}
+```
+
+Sometimes you want to verify something without the overhead of creating a method returning a _VoidResult_, then you may use a predicate and error supplier instead.
+
+Example of verifying the age of a customer. If the customer is under 18 then the returned _Result_ will contain the error message provided by the error supplier.
 
 ```java
 public Result<Customer, String> getGrownUpCustomer(String customerId) {
@@ -193,7 +212,7 @@ public Result<Customer, String> getGrownUpCustomer(String customerId) {
 }
 ```
 
-For _OptionalResult_ you may also verify the actual value if present. If the _OptionalResult_ was already empty it will remain empty.
+For _OptionalResult_ you may also verify the actual value if it is present. If the _OptionalResult_ was already empty it will remain empty. Verifying the value also supports both providing a function mapping to _VoidResult_, or using a predicate and error supplier.
 
 ```java
 public Result<Customer, String> getGrownUpCustomer(String customerId) {
@@ -291,6 +310,7 @@ public Status getCustomerStatus() {
 [`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable successRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#runEither(java.lang.Runnable,java.lang.Runnable))<br/>
 [`run(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#run(java.lang.Runnable))<br/>
 
+[`verify(Function<T, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#verify(java.util.function.Function))
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<T> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
 
 [`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<T, N> valueFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#fold(java.util.function.Function,java.util.function.Function))<br/>
@@ -344,7 +364,9 @@ public Status getCustomerStatus() {
 [`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable valueRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable emptyRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runEither(java.lang.Runnable,java.lang.Runnable,java.lang.Runnable))<br/>
 [`run(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#run(java.lang.Runnable))<br/>
 
+[`verify(Function<Optional<T>, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verify(java.util.function.Function))<br/>
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<Optional<T>> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
+[`verify(Function<T, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verifyValue(java.util.function.Function))<br/>
 [`verifyValue(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<T> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verifyValue(java.util.function.Predicate,java.util.function.Supplier))<br/>
 
 [`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<Optional<T>, N> successFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#fold(java.util.function.Function,java.util.function.Function))<br/>
@@ -393,6 +415,7 @@ public Status getCustomerStatus() {
 [`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable trueRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable falseRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#runEither(java.lang.Runnable,java.lang.Runnable,java.lang.Runnable))<br/>
 [`run(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#run(java.lang.Runnable))<br/>
 
+[`verify(Function<Boolean, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#verify(java.util.function.Function))
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<Boolean> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
 
 [`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<Boolean, N> successFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#fold(java.util.function.Function,java.util.function.Function))<br/>

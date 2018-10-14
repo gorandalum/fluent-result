@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
-class OptionalResult_Verify_Test {
+class OptionalResult_Verify_Predicate_Test {
 
     @Test
-    void verify_success_shouldKeepSuccessResultWhenVerifiedTrue() {
+    void verify_predicate_success_shouldKeepSuccessResultWhenVerifiedTrue() {
         OptionalResult<String, String> result = OptionalResult.<String, String>success("Success")
                 .verify(
                         maybeVal -> maybeVal.map(val -> val.length() == 7).orElse(false),
@@ -19,7 +19,7 @@ class OptionalResult_Verify_Test {
     }
 
     @Test
-    void verify_success_shouldChangeToProvidedErrorWhenVerifiedFalse() {
+    void verify_predicate_success_shouldChangeToProvidedErrorWhenVerifiedFalse() {
         OptionalResult<String, String> result = OptionalResult.<String, String>success("Success")
                 .verify(
                         maybeVal -> maybeVal.map(val -> val.length() == 5).orElse(false),
@@ -30,7 +30,7 @@ class OptionalResult_Verify_Test {
     }
 
     @Test
-    void verify_error_shouldKeepOriginalError() {
+    void verify_predicate_error_shouldKeepOriginalError() {
         OptionalResult<String, String> result = OptionalResult.<String, String>error("Error")
                 .verify(
                         maybeVal -> maybeVal.map(val -> val.length() == 5).orElse(false),
@@ -41,7 +41,7 @@ class OptionalResult_Verify_Test {
     }
 
     @Test
-    void verify_error_shouldNotRunVerificatorWhenError() {
+    void verify_predicate_error_shouldNotRunVerificatorWhenError() {
         OptionalResult<String, String> result = OptionalResult.<String, String>error("Error")
                 .verify(
                         val -> {
@@ -54,14 +54,14 @@ class OptionalResult_Verify_Test {
     }
 
     @Test
-    void verify_success_nullVerificatorGivesNPE() {
+    void verify_predicate_success_nullVerificatorGivesNPE() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
         assertThatThrownBy(() -> result.verify(null, () -> "ValidationError"))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    void verify_success_nullErrorSupplierGivesNPE() {
+    void verify_predicate_success_nullErrorSupplierGivesNPE() {
         OptionalResult<String, String> result = OptionalResult.success("Success");
         assertThatThrownBy(() -> result.verify(val -> true, null))
                 .isInstanceOf(NullPointerException.class);

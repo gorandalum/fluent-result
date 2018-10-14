@@ -2,16 +2,15 @@ package no.gorandalum.fluentresult;
 
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
-class BooleanResult_Verify_Test {
+class BooleanResult_Verify_VoidResult_Test {
 
     @Test
-    void verify_success_shouldKeepSuccessResultWhenVerifiedTrue() {
+    void verify_voidResult_success_shouldKeepSuccessResultWhenVoidResultSuccess() {
         BooleanResult<String> result = BooleanResult.<String>success(false)
-                .verify(
-                        val -> !val,
-                        () -> "ValidationError");
+                .verify(val -> VoidResult.success());
         result.consumeEither(
                 () -> fail("Should not be true"),
                 () -> {},
@@ -19,22 +18,18 @@ class BooleanResult_Verify_Test {
     }
 
     @Test
-    void verify_success_shouldChangeToProvidedErrorWhenVerifiedFalse() {
+    void verify_voidResult_success_shouldChangeToErrorWhenVoidResultError() {
         BooleanResult<String> result = BooleanResult.<String>success(true)
-                .verify(
-                        val -> !val,
-                        () -> "ValidationError");
+                .verify(val -> VoidResult.error("ValidationError"));
         result.consumeEither(
                 val -> fail("Expected no value"),
                 err -> assertThat(err).isEqualTo("ValidationError"));
     }
 
     @Test
-    void verify_error_shouldKeepOriginalError() {
+    void verify_voidResult_error_shouldKeepOriginalError() {
         BooleanResult<String> result = BooleanResult.error("Error")
-                .verify(
-                        val -> fail("Should not run verificator"),
-                        () -> "ValidationError");
+                .verify(val -> fail("Should not run"));
         result.consumeEither(
                 val -> fail("Expected no value"),
                 err -> assertThat(err).isEqualTo("Error"));

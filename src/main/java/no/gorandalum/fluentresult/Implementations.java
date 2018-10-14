@@ -115,6 +115,19 @@ final class Implementations {
                         instance : errorConstructor.apply(errorSupplier.get()));
     }
 
+    static <T, E, R extends BaseResult<T, E>> R verify(
+            Function<? super T, ? extends BaseResult<Void, ? extends E>> function,
+            Function<E, R> errorConstructor,
+            R instance) {
+        Objects.requireNonNull(function);
+        return instance.errorOpt()
+                .map(err -> instance)
+                .orElseGet(() -> {
+                    BaseResult<Void, ? extends E> res = function.apply(instance.value());
+                    return res.isSuccess() ? instance : errorConstructor.apply(res.error());
+                });
+    }
+
     static <T, E, N, NR, R extends BaseResult<T, E>> NR map(
             Function<? super T, ? extends N> function,
             Function<? super N, NR> successConstructor,
