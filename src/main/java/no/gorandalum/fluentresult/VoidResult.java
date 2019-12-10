@@ -2,8 +2,10 @@ package no.gorandalum.fluentresult;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -373,6 +375,55 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
         return errorOpt()
                 .map(OptionalResult::<N, E>error)
                 .orElseGet(OptionalResult::empty);
+    }
+
+    /**
+     * Handle the given {@code CheckedRunnable}. If the {@code CheckedRunnable}
+     * executes successfully, the {@code VoidResult} will be in success state.
+     * If the {@code CheckedRunnable} throws an exception, the
+     * {@code VoidResult} will be in error state containing the thrown exception.
+     *
+     * Note! A custom {@code CheckedRunnable} is used here instead of
+     * {@code Runnable} to allow handling of checked exceptions.
+     *
+     * @param runnable the {@code CheckedRunnable} to handle
+     * @return a {@code VoidResult} either in success state, or in error state
+     * containing the exception thrown by the {@code CheckedRunnable}
+     * @throws NullPointerException if the given runnable is {@code null}
+     */
+    public static VoidResult<Exception> handle(CheckedRunnable runnable) {
+        Objects.requireNonNull(runnable);
+        try {
+            runnable.run();
+            return VoidResult.success();
+        } catch (Exception e) {
+            return VoidResult.error(e);
+        }
+    }
+
+    /**
+     * Handle the given {@code CheckedRunnable}. If the {@code CheckedRunnable}
+     * executes successfully, the {@code VoidResult} will be in success state.
+     * If the {@code CheckedRunnable} throws an exception, the
+     * {@code VoidResult} will be in error state containing the result after
+     * mapping the exception with the given exception mapper function.
+     *
+     * Note! A custom {@code CheckedRunnable} is used here instead of
+     * {@code Runnable} to allow handling of checked exceptions.
+     *
+     * @param runnable the {@code CheckedRunnable} to handle
+     * @param <E> type of the error value after mapping a thrown exception
+     * @return a {@code VoidResult} either in success state, or in error state
+     * containing the result after mapping the exception thrown by the
+     * {@code CheckedRunnable}
+     * @throws NullPointerException if the given runnable is {@code null} or
+     * the given exception mapper function is {@code null} or returns
+     * {@code null}
+     */
+    public static <E> VoidResult<E> handle(CheckedRunnable runnable,
+                                           Function<Exception, E> exceptionMapper) {
+        Objects.requireNonNull(exceptionMapper);
+        return handle(runnable).mapError(exceptionMapper);
     }
 }
 

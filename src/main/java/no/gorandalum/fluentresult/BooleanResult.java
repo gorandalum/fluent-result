@@ -2,6 +2,7 @@ package no.gorandalum.fluentresult;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -655,6 +656,54 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
         return errorOpt()
                 .map(VoidResult::error)
                 .orElseGet(VoidResult::success);
+    }
+
+    /**
+     * Handle the given {@code Callable}. If the {@code Callable} executes
+     * successfully, the {@code BooleanResult} will be in success state 
+     * containing the returned value. If the {@code Callable} throws an
+     * exception, the {@code BooleanResult} will be in error state containing
+     * the thrown exception.
+     *
+     * @param callable the {@code Callable} to handle
+     * @return a {@code BooleanResult} either in success state containing the
+     * value from the {@code Callable}, or in error state containing the
+     * exception thrown by the {@code Callable}
+     * @throws NullPointerException if the given callable is {@code null} or
+     * returns {@code null}
+     */
+    public static BooleanResult<Exception> handle(Callable<Boolean> callable) {
+        Objects.requireNonNull(callable);
+        final Boolean value;
+        try {
+            value = callable.call();
+        } catch (Exception e) {
+            return BooleanResult.error(e);
+        }
+        return BooleanResult.success(value);
+    }
+
+    /**
+     * Handle the given {@code Callable}. If the {@code Callable} executes
+     * successfully, the {@code BooleanResult} will be in success state
+     * containing the returned value. If the {@code Callable} throws an
+     * exception, the {@code BooleanResult} will be in error state containing
+     * the result after mapping the exception with the given exception mapper
+     * function.
+     *
+     * @param callable the {@code Callable} to handle
+     * @param <E> type of the error value after mapping a thrown exception
+     * @return a {@code BooleanResult} either in success state containing the
+     * value from the {@code Callable}, or in error state containing the result
+     * after mapping the exception thrown by the {@code Callable}
+     * @throws NullPointerException if the given callable is {@code null} or 
+     * returns {@code null}, or if the given exception mapper function is 
+     * {@code null} or returns {@code null}
+     */
+    public static <E> BooleanResult<E> handle(Callable<Boolean> callable,
+                                              Function<Exception, E> exceptionMapper) {
+        Objects.requireNonNull(exceptionMapper);
+        return handle(callable).mapError(exceptionMapper);
     }
 }
 

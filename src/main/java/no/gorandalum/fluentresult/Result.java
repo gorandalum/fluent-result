@@ -2,6 +2,7 @@ package no.gorandalum.fluentresult;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -440,6 +441,54 @@ public final class Result<T, E> extends BaseResult<T, E> {
         return errorOpt()
                 .map(VoidResult::error)
                 .orElseGet(VoidResult::success);
+    }
+
+    /**
+     * Handle the given {@code Callable}. If the {@code Callable} executes
+     * successfully, the {@code Result} will be in success state containing the
+     * returned value. If the {@code Callable} throws an exception, the
+     * {@code Result} will be in error state containing the thrown exception.
+     *
+     * @param callable the {@code Callable} to handle
+     * @param <T> type of the return value of the {@code Callable}
+     * @return a {@code Result} either in success state containing the value
+     * from the {@code Callable}, or in error state containing the exception
+     * thrown by the {@code Callable}
+     * @throws NullPointerException if the given callable is {@code null} or
+     * returns {@code null}
+     */
+    public static <T> Result<T, Exception> handle(Callable<T> callable) {
+        Objects.requireNonNull(callable);
+        final T value;
+        try {
+            value = callable.call();
+        } catch (Exception e) {
+            return Result.error(e);
+        }
+        return Result.success(value);
+    }
+
+    /**
+     * Handle the given {@code Callable}. If the {@code Callable} executes
+     * successfully, the {@code Result} will be in success state containing the
+     * returned value. If the {@code Callable} throws an exception, the
+     * {@code Result} will be in error state containing the result after mapping
+     * the exception with the given exception mapper function.
+     *
+     * @param callable the {@code Callable} to handle
+     * @param <T> type of the return value of the {@code Callable}
+     * @param <E> type of the error value after mapping a thrown exception
+     * @return a {@code Result} either in success state containing the value
+     * from the {@code Callable}, or in error state containing the result after
+     * mapping the exception thrown by the {@code Callable}
+     * @throws NullPointerException if the given callable is {@code null} or
+     * returns {@code null}, or if the given exception mapper function is
+     * {@code null} or returns {@code null}
+     */
+    public static <T, E> Result<T, E> handle(Callable<T> callable,
+                                             Function<Exception, E> exceptionMapper) {
+        Objects.requireNonNull(exceptionMapper);
+        return handle(callable).mapError(exceptionMapper);
     }
 }
 
