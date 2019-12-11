@@ -291,6 +291,9 @@ public Status getCustomerStatus() {
 [`success(T value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#success(T))<br/>
 [`error(E value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#error(E))
 
+[`handle(Callable<T> callable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#handle(java.util.concurrent.Callable))
+[`handle(Callable<T> callable, Function<Exception, E> exceptionMapper)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#handle(java.util.concurrent.Callable,java.util.function.Function)))
+
 #### Instance Methods
 
 [`map(Function<T, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#map(java.util.function.Function))<br/>
@@ -332,6 +335,9 @@ public Status getCustomerStatus() {
 [`successNullable(T value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#successNullable(T))<br/>
 [`empty()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#empty())<br/>
 [`error(E value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#error(E))
+
+[`handle(Callable<T> callable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#handle(java.util.concurrent.Callable))
+[`handle(Callable<T> callable, Function<Exception, E> exceptionMapper)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#handle(java.util.concurrent.Callable,java.util.function.Function)))
 
 #### Instance Methods
 
@@ -392,6 +398,9 @@ public Status getCustomerStatus() {
 [`successFalse()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#successFalse())<br/>
 [`error(E value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#error(E))
 
+[`handle(Callable<T> callable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#handle(java.util.concurrent.Callable))
+[`handle(Callable<T> callable, Function<Exception, E> exceptionMapper)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#handle(java.util.concurrent.Callable,java.util.function.Function)))
+
 #### Instance Methods
 
 [`map(Function<Boolean, N> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#map(java.util.function.Function))<br/>
@@ -437,6 +446,9 @@ public Status getCustomerStatus() {
 
 [`success()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#success())<br/>
 [`error(E value)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#error(E))
+
+[`handle(CheckedRunnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#handle(no.gorandalum.fluentresult.CheckedRunnable))
+[`handle(CheckedRunnable runnable, Function<Exception, E> exceptionMapper)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#handle(no.gorandalum.fluentresult.CheckedRunnable,java.util.function.Function))
 
 #### Instance Methods
 

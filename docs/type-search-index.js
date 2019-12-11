@@ -1,1 +1,1 @@
-typeSearchIndex = [{"p":"no.gorandalum.fluentresult","l":"BooleanResult"},{"p":"no.gorandalum.fluentresult","l":"OptionalResult"},{"p":"no.gorandalum.fluentresult","l":"Result"},{"p":"no.gorandalum.fluentresult","l":"VoidResult"}]
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"no.gorandalum.fluentresult","l":"BooleanResult"},{"p":"no.gorandalum.fluentresult","l":"CheckedRunnable"},{"p":"no.gorandalum.fluentresult","l":"OptionalResult"},{"p":"no.gorandalum.fluentresult","l":"Result"},{"p":"no.gorandalum.fluentresult","l":"VoidResult"}]

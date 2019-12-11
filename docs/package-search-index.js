@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"no.gorandalum.fluentresult"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"no.gorandalum.fluentresult"}]
