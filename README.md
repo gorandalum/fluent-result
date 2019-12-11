@@ -57,6 +57,21 @@ Now the code can be used like this:
 Result<Customer, String> customerResult = getCustomer(id);
 ```
 
+You may also use the static factory method `handle` which runs a given _Callable_. If it runs successfully the return value of the _Callable_ will be the success value of the _Result_. If an exception is thrown it will be the error value of the _Result_. _Callable_ is used as parameter as it supports checked exceptions.
+
+```java
+Result<Customer, Exception> customerResult = Result.handle(
+        () -> service.getCustomer(id));
+```
+
+An exception mapper may also be provided to the `handle` method for mapping the exception if thrown.
+```java
+Result<Customer, String> customerResult = Result.handle(
+        () -> service.getCustomer(id), 
+        Exception::getMessage);
+```
+
+
 ### Chaining
 
 However the full benefit of using the Fluent Result library is more visible when using chaining and utilizing other methods that return _Result_ values.
@@ -74,7 +89,8 @@ Now the above methods can be called by chaining the calls.
 
 ```java
 public Result<BigDecimal, String> getBalance(String customerId, String accountId) {
-    return getCustomer(customerId)
+    return  Result.handle(() -> service.getCustomer(id)
+        .mapError(Exception::getMessage)
         .map(Customer::getAccounts)
         .flatMap(accounts -> findAccount(accounts, accountId))
         .consume(this::logAccountInfo)
@@ -83,7 +99,7 @@ public Result<BigDecimal, String> getBalance(String customerId, String accountId
 }
 ```
 
-In the above chain the methods `map`, `flatMap` and `consume` are invoked only if the _Result_ is in success state and contains a success value, and not if an error were returned somewhere in the chain, giving a _Result_ in error state. The method `consumeError` is only invoked if error state.
+In the above chain the methods `map`, `flatMap` and `consume` are invoked only if the _Result_ is in success state and contains a success value, and not if an error were returned somewhere in the chain, giving a _Result_ in error state. The methods `mapError` and `consumeError` is only invoked if error state.
 
 ### Additional Result Classes
 
