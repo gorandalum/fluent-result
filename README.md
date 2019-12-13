@@ -89,7 +89,7 @@ Now the above methods can be called by chaining the calls.
 
 ```java
 public Result<BigDecimal, String> getBalance(String customerId, String accountId) {
-    return  Result.handle(() -> service.getCustomer(id)
+    return Result.handle(() -> service.getCustomer(id))
         .mapError(Exception::getMessage)
         .map(Customer::getAccounts)
         .flatMap(accounts -> findAccount(accounts, accountId))
