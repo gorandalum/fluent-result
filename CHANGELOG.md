@@ -13,9 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.0] - 2018-10-30
 
-### Compile with jdk8
+### Changed
 
-- Explanation of the recommended reverse chronological release ordering.
+- Compile with jdk8
 
 ## [1.1.0] - 2018-10-14
 
