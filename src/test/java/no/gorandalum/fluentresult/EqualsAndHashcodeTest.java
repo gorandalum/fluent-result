@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EqualsAndHashcodeTest {
+class EqualsAndHashcodeTest {
 
     @Test
     void equals_sameObject() {

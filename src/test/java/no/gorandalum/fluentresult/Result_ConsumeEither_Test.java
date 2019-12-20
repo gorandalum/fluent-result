@@ -14,7 +14,7 @@ class Result_ConsumeEither_Test {
     private boolean passed;
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         passed = false;
     }
 

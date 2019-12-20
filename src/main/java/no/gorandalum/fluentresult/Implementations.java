@@ -62,19 +62,20 @@ final class Implementations {
                                                               R instance) {
         Objects.requireNonNull(valueConsumer);
         Objects.requireNonNull(errorConsumer);
-        instance.errorOpt().ifPresentOrElse(
-                errorConsumer,
-                () -> valueConsumer.accept(instance.value())
-        );
+        if (instance.isSuccess()) {
+            valueConsumer.accept(instance.value());
+        } else {
+            errorConsumer.accept(instance.error());
+        }
         return instance;
     }
 
     static <T, E, R extends BaseResult<T, E>> R runIfSuccess(Runnable runnable,
                                                              R instance) {
         Objects.requireNonNull(runnable);
-        instance.errorOpt().ifPresentOrElse(
-                err -> {},
-                runnable);
+        if (instance.isSuccess()) {
+            runnable.run();
+        }
         return instance;
     }
 
@@ -90,10 +91,11 @@ final class Implementations {
                                                           R instance) {
         Objects.requireNonNull(successRunnable);
         Objects.requireNonNull(errorRunnable);
-        instance.errorOpt().ifPresentOrElse(
-                err -> errorRunnable.run(),
-                successRunnable
-        );
+        if (instance.isSuccess()) {
+            successRunnable.run();
+        } else {
+            errorRunnable.run();
+        }
         return instance;
     }
 

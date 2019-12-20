@@ -250,7 +250,7 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * {@code null} or returns {@code null}
      */
     public <N> OptionalResult<N, E> mapValueToOptional(
-            Function<? super T, Optional<? extends N>> function) {
+            Function<? super T, Optional<N>> function) {
         return Implementations.map(
                 maybeVal -> maybeVal.flatMap(function),
                 OptionalResult::success,
@@ -523,7 +523,13 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
         Objects.requireNonNull(emptyRunnable);
 
         return Implementations.consumeEither(
-                maybeVal -> maybeVal.ifPresentOrElse(valueConsumer, emptyRunnable),
+                maybeVal -> {
+                    if (maybeVal.isPresent()) {
+                        valueConsumer.accept(maybeVal.get());
+                    } else {
+                        emptyRunnable.run();
+                    }
+                },
                 errorConsumer,
                 this
         );
@@ -577,7 +583,11 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      */
     public OptionalResult<T, E> runIfEmpty(Runnable runnable) {
         Objects.requireNonNull(runnable);
-        valueOpt().ifPresent(maybeVal -> maybeVal.ifPresentOrElse(val -> {}, runnable));
+        valueOpt().ifPresent(maybeVal -> {
+            if (!maybeVal.isPresent()) {
+                runnable.run();
+            }
+        });
         return this;
     }
 
@@ -624,7 +634,13 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
         Objects.requireNonNull(valueRunnable);
         Objects.requireNonNull(emptyRunnable);
         return Implementations.runEither(
-                () -> value().ifPresentOrElse(val -> valueRunnable.run(), emptyRunnable),
+                () -> {
+                    if (value().isPresent()) {
+                        valueRunnable.run();
+                    } else {
+                        emptyRunnable.run();
+                    }
+                },
                 errorRunnable, this);
     }
 
