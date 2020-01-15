@@ -699,9 +699,22 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * @param runnable the runnable to run
      * @return the original {@code OptionalResult} unaltered
      * @throws NullPointerException if the given runnable is {@code null}
+     * @deprecated use {@link #runAlways} instead for clarity
      */
+    @Deprecated
     public OptionalResult<T, E> run(Runnable runnable) {
-        return Implementations.run(runnable, this);
+        return runAlways(runnable);
+    }
+
+    /**
+     * Runs the given runnable, no matter the state.
+     *
+     * @param runnable the runnable to run
+     * @return the original {@code OptionalResult} unaltered
+     * @throws NullPointerException if the given runnable is {@code null}
+     */
+    public OptionalResult<T, E> runAlways(Runnable runnable) {
+        return Implementations.runAlways(runnable, this);
     }
 
     /**

@@ -99,7 +99,7 @@ final class Implementations {
         return instance;
     }
 
-    static <T, E, R extends BaseResult<T, E>> R run(Runnable runnable, R instance) {
+    static <T, E, R extends BaseResult<T, E>> R runAlways(Runnable runnable, R instance) {
         Objects.requireNonNull(runnable);
         runnable.run();
         return instance;

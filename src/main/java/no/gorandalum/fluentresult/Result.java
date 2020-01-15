@@ -316,9 +316,22 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * @param runnable the runnable to run
      * @return the original {@code Result} unaltered
      * @throws NullPointerException if the given runnable is {@code null}
+     * @deprecated use {@link #runAlways} instead for clarity
      */
+    @Deprecated
     public Result<T, E> run(Runnable runnable) {
-        return Implementations.run(runnable, this);
+        return runAlways(runnable);
+    }
+
+    /**
+     * Runs the given runnable, no matter the state.
+     *
+     * @param runnable the runnable to run
+     * @return the original {@code Result} unaltered
+     * @throws NullPointerException if the given runnable is {@code null}
+     */
+    public Result<T, E> runAlways(Runnable runnable) {
+        return Implementations.runAlways(runnable, this);
     }
 
     /**
