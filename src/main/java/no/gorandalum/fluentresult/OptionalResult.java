@@ -536,6 +536,55 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
+     * If in success state, applies the optional success value to the given
+     * function. If the function returns a {@code VoidResult} in success state,
+     * the original {@code OptionalResult} is returned unaltered. If the function
+     * returns a {@code VoidResult} in error state, a {@code OptionalResult}
+     * containing the error value is returned. If in error state, the original
+     * {@code OptionalResult} is returned unaltered.
+     *
+     * @param function the function which accepts the optional success value
+     * @return the original {@code OptionalResult} unaltered if the given
+     * function returns success or the original {@code OptionalResult} is in
+     * error state, otherwise a {@code OptionalResult} containing the error value
+     * from the function result
+     * @throws NullPointerException if the given function is {@code null} or
+     * returns {@code null}
+     */
+    public OptionalResult<T, E> flatConsume(
+            Function<Optional<T>, ? extends VoidResult<? extends E>> function) {
+        return Implementations.flatConsume(function, OptionalResult::error, this);
+    }
+
+    /**
+     * If in success state, applies the success value to the given function. If
+     * the function returns a {@code VoidResult} in success state, the original
+     * {@code OptionalResult} is returned unaltered. If the function returns a
+     * {@code VoidResult} in error state, a {@code OptionalResult} containing
+     * the error value is returned. If in empty or error state, the original
+     * {@code OptionalResult} is returned unaltered.
+     *
+     * @param function the function which accepts the success value
+     * @return the original {@code OptionalResult} unaltered if the given
+     * function returns success or the original {@code OptionalResult} is in
+     * empty or error state, otherwise a {@code OptionalResult} containing the
+     * error value from the function result
+     * @throws NullPointerException if the given function is {@code null} or
+     * returns {@code null}
+     */
+    public OptionalResult<T, E> flatConsumeValue(
+            Function<T, ? extends VoidResult<? extends E>> function) {
+        Objects.requireNonNull(function);
+        @SuppressWarnings("unchecked")
+        OptionalResult<T, E> result = Implementations.flatConsume(
+                maybeVal -> maybeVal
+                        .map(val -> (VoidResult<E>) Objects.requireNonNull(function.apply(val)))
+                        .orElseGet(VoidResult::success)
+                , OptionalResult::error, this);
+        return result;
+    }
+
+    /**
      * If in success state, runs the given runnable, otherwise does nothing.
      *
      * @param runnable the runnable to run if success state
@@ -704,7 +753,7 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      */
     public OptionalResult<T, E> verify(
             Function<Optional<T>, ? extends VoidResult<? extends E>> function) {
-        return Implementations.verify(function, OptionalResult::error, this);
+        return Implementations.flatConsume(function, OptionalResult::error, this);
     }
 
     /**
@@ -757,7 +806,7 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     public OptionalResult<T, E> verifyValue(
             Function<? super T, ? extends VoidResult<? extends E>> function) {
         @SuppressWarnings("unchecked")
-        OptionalResult<T, E> result = Implementations.verify(
+        OptionalResult<T, E> result = Implementations.flatConsume(
                 maybeValue -> maybeValue
                         .map(val -> (VoidResult<E>) Objects.requireNonNull(function.apply(val)))
                         .orElseGet(VoidResult::success),

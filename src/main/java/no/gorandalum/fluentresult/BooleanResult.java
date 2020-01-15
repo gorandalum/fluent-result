@@ -346,6 +346,26 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
     }
 
     /**
+     * If in success state, applies the boolean success value to the given
+     * function. If the function returns a {@code VoidResult} in success state,
+     * the original {@code BooleanResult} is returned unaltered. If the function
+     * returns a {@code VoidResult} in error state, a {@code BooleanResult}
+     * containing the error value is returned. If in error state, the original
+     * {@code BooleanResult} is returned unaltered.
+     *
+     * @param function the function which accepts the boolean success value
+     * @return the original {@code BooleanResult} unaltered if the given
+     * function returns success or the original {@code BooleanResult} is in
+     * error state, otherwise a {@code BooleanResult} containing the error value
+     * from the function result
+     * @throws NullPointerException if the given function is {@code null} or
+     * returns {@code null}
+     */
+    public BooleanResult<E> flatConsume(Function<Boolean, ? extends VoidResult<? extends E>> function) {
+        return Implementations.flatConsume(function, BooleanResult::error, this);
+    }
+
+    /**
      * If in success state, runs the given runnable, otherwise does nothing.
      *
      * @param runnable the runnable to run if success state
@@ -502,7 +522,7 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      * returns {@code null}
      */
     public BooleanResult<E> verify(Function<Boolean, ? extends VoidResult<? extends E>> function) {
-        return Implementations.verify(function, BooleanResult::error, this);
+        return Implementations.flatConsume(function, BooleanResult::error, this);
     }
 
     /**

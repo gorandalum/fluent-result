@@ -247,11 +247,32 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * @param valueConsumer the consumer which accepts the success value
      * @param errorConsumer the consumer which accepts the error value
      * @return the original {@code Result} unaltered
-     * @throws NullPointerException if one of the given consumers is {@code null}
+     * @throws NullPointerException if one of the given consumers is
+     * {@code null}
      */
     public Result<T, E> consumeEither(Consumer<? super T> valueConsumer,
                                       Consumer<? super E> errorConsumer) {
         return Implementations.consumeEither(valueConsumer, errorConsumer, this);
+    }
+
+    /**
+     * If in success state, applies the success value to the given function. If
+     * the function returns a {@code VoidResult} in success state, the original
+     * {@code Result} is returned unaltered. If the function returns a
+     * {@code VoidResult} in error state, a {@code Result} containing the error
+     * value is returned. If in error state, the original {@code Result} is
+     * returned unaltered.
+     *
+     * @param function the function which accepts the success value
+     * @return the original {@code Result} unaltered if the given function
+     * returns success or the original {@code Result} is in error state,
+     * otherwise a {@code Result} containing the error value from the function
+     * result
+     * @throws NullPointerException if the given function is {@code null} or
+     * returns {@code null}
+     */
+    public Result<T, E> flatConsume(Function<? super T, ? extends VoidResult<? extends E>> function) {
+        return Implementations.flatConsume(function, Result::error, this);
     }
 
     /**
@@ -342,7 +363,7 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * returns {@code null}
      */
     public Result<T, E> verify(Function<? super T, ? extends VoidResult<? extends E>> function) {
-        return Implementations.verify(function, Result::error, this);
+        return Implementations.flatConsume(function, Result::error, this);
     }
 
     /**

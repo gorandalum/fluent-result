@@ -117,7 +117,7 @@ final class Implementations {
                         instance : errorConstructor.apply(errorSupplier.get()));
     }
 
-    static <T, E, R extends BaseResult<T, E>> R verify(
+    static <T, E, R extends BaseResult<T, E>> R flatConsume(
             Function<? super T, ? extends BaseResult<Void, ? extends E>> function,
             Function<E, R> errorConstructor,
             R instance) {
