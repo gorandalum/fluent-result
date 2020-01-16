@@ -105,6 +105,21 @@ final class Implementations {
         return instance;
     }
 
+
+
+    static <T, E, R extends BaseResult<T, E>> R flatRunIfSuccess(
+            Supplier<? extends BaseResult<Void, ? extends E>> supplier,
+            Function<E, R> errorConstructor,
+            R instance) {
+        Objects.requireNonNull(supplier);
+        return instance.errorOpt()
+                .map(err -> instance)
+                .orElseGet(() -> {
+                    BaseResult<Void, ? extends E> res = supplier.get();
+                    return res.isSuccess() ? instance : errorConstructor.apply(res.error());
+                });
+    }
+
     static <T, E, R extends BaseResult<T, E>> R verify(Predicate<? super T> predicate,
                                                        Supplier<? extends E> errorSupplier,
                                                        Function<E, R> errorConstructor,

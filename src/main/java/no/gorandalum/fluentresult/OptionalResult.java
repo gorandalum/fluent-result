@@ -546,8 +546,8 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * @param function the function which accepts the optional success value
      * @return the original {@code OptionalResult} unaltered if the given
      * function returns success or the original {@code OptionalResult} is in
-     * error state, otherwise a {@code OptionalResult} containing the error value
-     * from the function result
+     * error state, otherwise a {@code OptionalResult} containing the error
+     * value from the function result
      * @throws NullPointerException if the given function is {@code null} or
      * returns {@code null}
      */
@@ -715,6 +715,58 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      */
     public OptionalResult<T, E> runAlways(Runnable runnable) {
         return Implementations.runAlways(runnable, this);
+    }
+
+    /**
+     * If in success state, runs the given supplier. If the supplier returns a
+     * {@code VoidResult} in success state, the original {@code OptionalResult}
+     * is returned unaltered. If the supplier returns a {@code VoidResult} in
+     * error state, a {@code OptionalResult} containing the error value is
+     * returned. If in error state, the original {@code OptionalResult} is
+     * returned unaltered.
+     *
+     * @param supplier the supplier to run
+     * @return the original {@code OptionalResult} unaltered if the given
+     * supplier returns success or the original {@code OptionalResult} is in
+     * error state, otherwise a {@code OptionalResult} containing the error
+     * value from the supplier result
+     * @throws NullPointerException if the given supplier is {@code null} or
+     * returns {@code null}
+     */
+    public OptionalResult<T, E> flatRunIfSuccess(
+            Supplier<? extends VoidResult<? extends E>> supplier) {
+        return Implementations.flatRunIfSuccess(supplier, OptionalResult::error, this);
+    }
+
+    /**
+     * If in success state with a success value, runs the given supplier. If the
+     * supplier returns a {@code VoidResult} in success state, the original
+     * {@code OptionalResult} is returned unaltered. If the supplier returns a
+     * {@code VoidResult} in error state, a {@code OptionalResult} containing
+     * the error value is returned. If in error state or empty, the original
+     * {@code OptionalResult} is returned unaltered.
+     *
+     * @param supplier the supplier to run
+     * @return the original {@code OptionalResult} unaltered if the given
+     * supplier returns success or the original {@code OptionalResult} is in
+     * empty or error state, otherwise a {@code OptionalResult} containing the
+     * error value from the supplier result
+     * @throws NullPointerException if the given supplier is {@code null} or
+     * returns {@code null}
+     */
+    public OptionalResult<T, E> flatRunIfValue(
+            Supplier<? extends VoidResult<? extends E>> supplier) {
+        Objects.requireNonNull(supplier);
+        return Implementations.flatRunIfSuccess(
+                () -> {
+                    if (value() != null && value().isPresent()) {
+                        return supplier.get();
+                    } else {
+                        return VoidResult.success();
+                    }
+                },
+                OptionalResult::error,
+                this);
     }
 
     /**

@@ -489,6 +489,26 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
     }
 
     /**
+     * If in success state, runs the given supplier. If the supplier returns a
+     * {@code VoidResult} in success state, the original {@code BooleanResult}
+     * is returned unaltered. If the supplier returns a {@code VoidResult} in
+     * error state, a {@code BooleanResult} containing the error value is
+     * returned. If in error state, the original {@code BooleanResult} is
+     * returned unaltered.
+     *
+     * @param supplier the supplier to run
+     * @return the original {@code BooleanResult} unaltered if the given
+     * supplier returns success or the original {@code BooleanResult} is in
+     * error state, otherwise a {@code BooleanResult} containing the error value
+     * from the supplier result
+     * @throws NullPointerException if the given supplier is {@code null} or
+     * returns {@code null}
+     */
+    public BooleanResult<E> flatRunIfSuccess(Supplier<? extends VoidResult<? extends E>> supplier) {
+        return Implementations.flatRunIfSuccess(supplier, BooleanResult::error, this);
+    }
+
+    /**
      * If in success state, verifies the boolean success value of this
      * {@code BooleanResult} by testing it with the given predicate. If the
      * predicate evaluates to false, a new {@code BooleanResult} is returned

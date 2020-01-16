@@ -328,6 +328,25 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
     }
 
     /**
+     * If in success state, runs the given supplier. If the supplier returns a
+     * {@code VoidResult} in success state, the original {@code VoidResult} is
+     * returned unaltered. If the supplier returns a {@code VoidResult} in error
+     * state, a {@code VoidResult} containing the error value is returned. If in
+     * error state, the original {@code VoidResult} is returned unaltered.
+     *
+     * @param supplier the supplier to run
+     * @return the original {@code VoidResult} unaltered if the given supplier
+     * returns success or the original {@code VoidResult} is in error state,
+     * otherwise a {@code VoidResult} containing the error value from the
+     * supplier result
+     * @throws NullPointerException if the given supplier is {@code null} or
+     * returns {@code null}
+     */
+    public VoidResult<E> flatRunIfSuccess(Supplier<? extends VoidResult<? extends E>> supplier) {
+        return Implementations.flatRunIfSuccess(supplier, VoidResult::error, this);
+    }
+
+    /**
      * Retrieve a value from this {@code VoidResult} by folding the states. If
      * in success state, return the value provided by the value-supplier. If in
      * error state, return the value of applying the error-function to the error
