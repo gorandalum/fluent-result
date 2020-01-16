@@ -102,7 +102,7 @@
                 <version>3.0.1</version>
                 <configuration>
                     <reportOutputDirectory>${project.basedir}/</reportOutputDirectory>
-                    <!--<additionalOptions>-html5</additionalOptions>-->
+                    <additionalOptions>-html5</additionalOptions>
                     <destDir>docs</destDir>
                 </configuration>
             </plugin>
@@ -176,7 +176,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <!--<additionalOptions>-html5</additionalOptions>-->
+                            <additionalOptions>-html5</additionalOptions>
                         </configuration>
                     </plugin>
                     <plugin>
