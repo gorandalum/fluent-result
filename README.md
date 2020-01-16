@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.com/gorandalum/fluent-result.svg?branch=master)](https://travis-ci.com/gorandalum/fluent-result)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maven Central](https://img.shields.io/maven-central/v/no.gorandalum/fluent-result.svg)](https://mvnrepository.com/artifact/no.gorandalum/fluent-result)
-[![Changelog](https://img.shields.io/badge/changelog-v1.4.0-orange)](https://github.com/gorandalum/fluent-result/blob/master/CHANGELOG.md)
+[![Changelog](https://img.shields.io/badge/changelog-v1.5.0-orange)](https://github.com/gorandalum/fluent-result/blob/master/CHANGELOG.md)
 
 # Fluent Result
 
@@ -327,10 +327,14 @@ public Status getCustomerStatus() {
 [`consumeError(Consumer<E> consumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#consumeError(java.util.function.Consumer))<br/>
 [`consumeEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<T> valueConsumer,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<E> errorConsumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#consumeEither(java.util.function.Consumer,java.util.function.Consumer))<br/>
 
+[`flatConsume(Function<T, VoidResult<E> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#flatConsume(java.util.function.Function))<br/>
+
 [`runIfSuccess(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#runIfSuccess(java.lang.Runnable))<br/>
 [`runIfError(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#runIfError(java.lang.Runnable))<br/>
 [`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable successRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#runEither(java.lang.Runnable,java.lang.Runnable))<br/>
-[`run(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#run(java.lang.Runnable))<br/>
+[`runAlways(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#runAlways(java.lang.Runnable))<br/>
+
+[`flatRunIfSuccess(Supplier<VoidResult<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#flatRunIfSuccess(java.util.function.Supplier))<br/>
 
 [`verify(Function<T, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#verify(java.util.function.Function))<br/>
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<T> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
@@ -380,6 +384,9 @@ public Status getCustomerStatus() {
 [`consumeEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<Optional<T>> successConsumer,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<E> errorConsumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#consumeEither(java.util.function.Consumer,java.util.function.Consumer))<br/>
 [`consumeEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<T> valueConsumer,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable emptyRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<E> errorConsumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#consumeEither(java.util.function.Consumer,java.lang.Runnable,java.util.function.Consumer))<br/>
 
+[`flatConsume(Function<Optional<T>, VoidResult<E> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatConsume(java.util.function.Function))<br/>
+[`flatConsumeValue(Function<T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatConsumeValue(java.util.function.Function))<br/>
+
 [`runIfSuccess(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfSuccess(java.lang.Runnable))<br/>
 [`runIfValue(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfValue(java.lang.Runnable))<br/>
 [`runIfNoValue(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfNoValue(java.lang.Runnable))<br/>
@@ -387,7 +394,10 @@ public Status getCustomerStatus() {
 [`runIfError(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runIfError(java.lang.Runnable))<br/>
 [`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable successRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runEither(java.lang.Runnable,java.lang.Runnable))<br/>
 [`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable valueRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable emptyRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runEither(java.lang.Runnable,java.lang.Runnable,java.lang.Runnable))<br/>
-[`run(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#run(java.lang.Runnable))<br/>
+[`runAlways(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#runAlways(java.lang.Runnable))<br/>
+
+[`flatRunIfSuccess(Supplier<VoidResult<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatRunIfSuccess(java.util.function.Supplier))<br/>
+[`flatRunIfValue(Supplier<VoidResult<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatRunIfValue(java.util.function.Supplier))<br/>
 
 [`verify(Function<Optional<T>, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verify(java.util.function.Function))<br/>
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<Optional<T>> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
@@ -435,13 +445,17 @@ public Status getCustomerStatus() {
 [`consumeEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<Boolean> successConsumer,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<E> errorConsumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#consumeEither(java.util.function.Consumer,java.util.function.Consumer))<br/>
 [`consumeEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable trueRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable falseRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Consumer<E> errorConsumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#consumeEither(java.lang.Runnable,java.lang.Runnable,java.util.function.Consumer))<br/>
 
+[`flatConsume(Function<Boolean, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#flatConsume(java.util.function.Function))<br/>
+
 [`runIfSuccess(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#runIfSuccess(java.lang.Runnable))<br/>
 [`runIfTrue(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#runIfTrue(java.lang.Runnable))<br/>
 [`runIfFalse(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#runIfFalse(java.lang.Runnable))<br/>
 [`runIfError(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#runIfError(java.lang.Runnable))<br/>
 [`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable successRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#runEither(java.lang.Runnable,java.lang.Runnable))<br/>
 [`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable trueRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable falseRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#runEither(java.lang.Runnable,java.lang.Runnable,java.lang.Runnable))<br/>
-[`run(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#run(java.lang.Runnable))<br/>
+[`runAlways(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#runAlways(java.lang.Runnable))<br/>
+
+[`flatRunIfSuccess(Supplier<VoidResult<E>> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#flatRunIfSuccess(java.util.function.Supplier))<br/>
 
 [`verify(Function<Boolean, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#verify(java.util.function.Function))<br/>
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<Boolean> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
@@ -486,7 +500,9 @@ public Status getCustomerStatus() {
 [`runIfSuccess(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#runIfSuccess(java.lang.Runnable))<br/>
 [`runIfError(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#runIfError(java.lang.Runnable))<br/>
 [`runEither(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable successRunnable,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Runnable errorRunnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#runEither(java.lang.Runnable,java.lang.Runnable))<br/>
-[`run(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#run(java.lang.Runnable))<br/>
+[`runAlways(Runnable runnable)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#runAlways(java.lang.Runnable))<br/>
+
+[`flatRunIfSuccess(Suppluer<VoidResult<E>> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#flatRunIfSuccess(java.util.function.Supplier))<br/>
 
 [`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> valueSupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#fold(java.util.function.Supplier,java.util.function.Function))<br/>
 [`orElseThrow(Function<E, X> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#orElseThrow(java.util.function.Function))<br/>
