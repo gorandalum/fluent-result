@@ -305,6 +305,31 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
+     * If in success state with value, returns the {@code OptionalResult} unaltered.
+     * If in empty success state, returns the {@code OptionalResult} from applying
+     * the given supplier, otherwise
+     * returns the unaltered {@code OptionalResult} in error state.
+     *
+     * @param <N> the type of success value which may be present in the
+     * {@code OptionalResult} returned by the mapping function
+     * @param supplier the supplier to call if in empty success state.
+     * @return the {@code OptionalResult} unaltered if in success state with value,
+     * or unaltered {@code OptionalResult} in error state.
+     * If in empty success state, return the result of the given supplier.
+     * @throws NullPointerException if the given mapping function is
+     * {@code null} or returns {@code null}
+     */
+    public <N> OptionalResult<N, E> flatReplaceEmpty(
+            Supplier<OptionalResult<N, E>> supplier) {
+
+        @SuppressWarnings("unchecked")
+        OptionalResult<N, E> res = Implementations.flatMap(
+                t -> t.map(value -> OptionalResult.<N, E>success((Optional<? extends N>) value)).orElseGet(supplier),
+                this);
+        return res;
+    }
+
+    /**
      * If in success state, returns the {@code BooleanResult} from applying
      * the given mapping function to the optional success value, otherwise
      * returns a {@code BooleanResult} containing the error value of this
