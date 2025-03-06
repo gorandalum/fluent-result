@@ -55,11 +55,11 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
 
     /**
      * Returns a {@code BooleanResult} in success state containing {@code true}
-     * as the the boolean success value.
+     * as the boolean success value.
      *
      * @param <E> the type of the error value
      * @return a {@code BooleanResult} in success state containing {@code true}
-     * as the the boolean success value.
+     * as the boolean success value.
      */
     public static <E> BooleanResult<E> successTrue() {
         @SuppressWarnings("unchecked")
@@ -69,11 +69,11 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
 
     /**
      * Returns a {@code BooleanResult} in success state containing {@code false}
-     * as the the boolean success value.
+     * as the boolean success value.
      *
      * @param <E> the type of the error value
      * @return a {@code BooleanResult} in success state containing {@code false}
-     * as the the boolean success value.
+     * as the boolean success value.
      */
     public static <E> BooleanResult<E> successFalse() {
         @SuppressWarnings("unchecked")
