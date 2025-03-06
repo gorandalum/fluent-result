@@ -444,6 +444,25 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
+     * If in error state, returns the {@code OptionalResult} from applying the given
+     * mapping function to the error value, otherwise returns the unaltered
+     * {@code OptionalResult} in success state.
+     * @param function the mapping function to apply to the error value to convert to a new {@code OptionalResult}, if
+     * error state
+     * {@code OptionalResult} returned by the mapping function
+     * @return the {@code OptionalResult} returned from the mapping function, if in
+     * error state, otherwise the unaltered {@code OptionalResult} in success state
+     */
+    public <N> OptionalResult<N, E> recover(
+            Function<E, OptionalResult<? extends N, ? extends E>> function) {
+        @SuppressWarnings("unchecked")
+        OptionalResult<N, E> res = (OptionalResult<N, E>) Implementations.recover(
+                val -> function.apply(error()),
+                this);
+        return res;
+    }
+
+    /**
      * If in success state, applies the optional success value to the given
      * consumer, otherwise does nothing.
      *
