@@ -236,6 +236,25 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
     }
 
     /**
+     * If in error state, returns the {@code VoidResult} from applying the given
+     * mapping function to the error value, otherwise returns the unaltered
+     * {@code VoidResult} in success state.
+     * @param function the mapping function to apply to the error value to convert to a new {@code VoidResult}, if
+     * error state
+     * {@code VoidResult} returned by the mapping function
+     * @return the {@code VoidResult} returned from the mapping function, if in
+     * error state, otherwise the unaltered {@code VoidResult} in success state
+     */
+    public VoidResult<E> recover(
+            Function<E, VoidResult<? extends E>> function) {
+        @SuppressWarnings("unchecked")
+        VoidResult<E> res = (VoidResult<E>) Implementations.recover(
+                val -> function.apply(error()),
+                this);
+        return res;
+    }
+
+    /**
      * If in error state, applies the error value to the given consumer,
      * otherwise does nothing.
      *
