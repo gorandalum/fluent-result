@@ -179,7 +179,8 @@ final class Implementations {
     }
 
     static <T, E, N, NR extends BaseResult<? extends N, ? extends E>, R extends BaseResult<T, E>> NR flatMap(
-            Function<? super T, ? extends NR> function, R instance,
+            Function<? super T, ? extends NR> function,
+            R instance,
             Function<? super E, ? extends NR> errorConstructor) {
         Objects.requireNonNull(function);
         return instance.isSuccess() ?
