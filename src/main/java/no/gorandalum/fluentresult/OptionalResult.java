@@ -305,27 +305,47 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
-     * If in success state with value, returns the {@code OptionalResult} unaltered.
-     * If in empty success state, returns the {@code OptionalResult} from applying
-     * the given supplier, otherwise
-     * returns the unaltered {@code OptionalResult} in error state.
+     * If in empty success state, returns the {@code OptionalResult} from
+     * applying the given supplier, otherwise returns the unaltered
+     * {@code OptionalResult} in success state with value or error state.
      *
      * @param <N> the type of success value which may be present in the
-     * {@code OptionalResult} returned by the mapping function
+     * {@code OptionalResult} returned by this function.
      * @param supplier the supplier to call if in empty success state.
-     * @return the {@code OptionalResult} unaltered if in success state with value,
-     * or unaltered {@code OptionalResult} in error state.
-     * If in empty success state, return the result of the given supplier.
-     * @throws NullPointerException if the given mapping function is
-     * {@code null} or returns {@code null}
+     * @return the {@code OptionalResult} returned from the supplier, if in empty
+     * state, otherwise the unaltered {@code OptionalResult} in  success state
+     * with value or error state
+     * @throws NullPointerException if the given supplier is {@code null} or
+     * returns {@code null}
      */
     public <N> OptionalResult<N, E> flatReplaceEmpty(
             Supplier<OptionalResult<N, E>> supplier) {
-
         @SuppressWarnings("unchecked")
         OptionalResult<N, E> res = Implementations.flatMap(
-                t -> t.map(value -> OptionalResult.<N, E>success((Optional<? extends N>) value)).orElseGet(supplier),
+                t -> t.map(value -> OptionalResult.<N, E>success((N)value)).orElseGet(supplier),
                 this);
+        return res;
+    }
+
+    /**
+     * If in empty success state, returns the {@code Result} from applying the
+     * given supplier, otherwise returns a {@code Result} with the existing
+     * success value or error value.
+     *
+     * @param <N> the type of success value which may be present in the
+     * {@code Result} returned by this function.
+     * @param supplier the supplier to call if in empty success state.
+     * @return the {@code Result} returned from the supplier, if in empty state,
+     * otherwise a {@code Result} with the existing success value or error value.
+     * @throws NullPointerException if the given supplier is {@code null} or
+     * returns {@code null}
+     */
+    public <N> Result<N, E> flatReplaceEmptyWithResult(
+            Supplier<Result<N, E>> supplier) {
+        @SuppressWarnings("unchecked")
+        Result<N, E> res = Implementations.flatMap(
+                t -> t.map(value -> Result.<N, E>success((N)value)).orElseGet(supplier),
+                this, Result::error);
         return res;
     }
 
