@@ -226,10 +226,10 @@ public final class Result<T, E> extends BaseResult<T, E> {
      * @return the {@code Result} returned from the mapping function, if in
      * error state, otherwise the unaltered {@code Result} in success state
      */
-    public <N> Result<N, E> recover(
+    public <N> Result<N, E> flatRecover(
             Function<E, Result<? extends N, ? extends E>> function) {
         @SuppressWarnings("unchecked")
-        Result<N, E> res = (Result<N, E>) Implementations.recover(
+        Result<N, E> res = (Result<N, E>) Implementations.flatRecover(
                 val -> function.apply(error()),
                 this);
         return res;

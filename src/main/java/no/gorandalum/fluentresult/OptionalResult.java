@@ -453,10 +453,10 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
      * @return the {@code OptionalResult} returned from the mapping function, if in
      * error state, otherwise the unaltered {@code OptionalResult} in success state
      */
-    public <N> OptionalResult<N, E> recover(
+    public <N> OptionalResult<N, E> flatRecover(
             Function<E, OptionalResult<? extends N, ? extends E>> function) {
         @SuppressWarnings("unchecked")
-        OptionalResult<N, E> res = (OptionalResult<N, E>) Implementations.recover(
+        OptionalResult<N, E> res = (OptionalResult<N, E>) Implementations.flatRecover(
                 val -> function.apply(error()),
                 this);
         return res;

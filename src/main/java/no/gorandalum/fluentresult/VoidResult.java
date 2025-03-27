@@ -245,10 +245,10 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
      * @return the {@code VoidResult} returned from the mapping function, if in
      * error state, otherwise the unaltered {@code VoidResult} in success state
      */
-    public VoidResult<E> recover(
+    public VoidResult<E> flatRecover(
             Function<E, VoidResult<? extends E>> function) {
         @SuppressWarnings("unchecked")
-        VoidResult<E> res = (VoidResult<E>) Implementations.recover(
+        VoidResult<E> res = (VoidResult<E>) Implementations.flatRecover(
                 val -> function.apply(error()),
                 this);
         return res;

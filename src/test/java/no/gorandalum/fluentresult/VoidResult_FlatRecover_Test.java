@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-class VoidResult_Recover_Test {
+class VoidResult_FlatRecover_Test {
 
     @Test
-    void recover_success_shouldReturnValue() {
+    void flatFlatRecover_success_shouldReturnValue() {
         VoidResult<String> result = VoidResult.success();
-        VoidResult<String> shouldNotBeError = result.recover(error -> VoidResult.success())
+        VoidResult<String> shouldNotBeError = result.flatRecover(error -> VoidResult.success())
                 .consumeEither(
                         () -> { },
                         err -> fail("Should not be error")
@@ -19,9 +19,9 @@ class VoidResult_Recover_Test {
     }
 
     @Test
-    void recover_error_should_return_recovered_value() {
+    void flatFlatRecover_error_should_return_recovered_value() {
         VoidResult<String> result = VoidResult.error("Error");
-        result.recover(error -> VoidResult.success())
+        result.flatRecover(error -> VoidResult.success())
                 .consumeEither(
                         () -> { },
                         err -> fail("Should not be error")

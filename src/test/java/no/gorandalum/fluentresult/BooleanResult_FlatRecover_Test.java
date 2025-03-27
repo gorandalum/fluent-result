@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-class BooleanResult_Recover_Test {
+class BooleanResult_FlatRecover_Test {
 
     @Test
-    void recover_success_shouldReturnValue() {
+    void flatFlatRecover_success_shouldReturnValue() {
         BooleanResult<String> result = BooleanResult.success(true);
-        BooleanResult<String> shouldNotBeError = result.recover(error -> BooleanResult.success(true))
+        BooleanResult<String> shouldNotBeError = result.flatRecover(error -> BooleanResult.success(true))
                 .consumeEither(
                         value -> assertThat(value).isEqualTo(true),
                         err -> fail("Should not be error")
@@ -19,9 +19,9 @@ class BooleanResult_Recover_Test {
     }
 
     @Test
-    void recover() {
+    void flatFlatRecover() {
         BooleanResult<String> result = BooleanResult.error("Error");
-        result.recover(error -> BooleanResult.success(true))
+        result.flatRecover(error -> BooleanResult.success(true))
                 .consumeEither(
                         value -> assertThat(value).isEqualTo(true),
                         err -> fail("Should not be error")

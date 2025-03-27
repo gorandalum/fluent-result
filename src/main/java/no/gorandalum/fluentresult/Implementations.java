@@ -188,7 +188,7 @@ final class Implementations {
                 errorConstructor.apply(instance.error());
     }
 
-    static <T, E, N, NR extends BaseResult<? extends N, ? extends E>, R extends BaseResult<T, E>> NR recover(
+    static <T, E, N, NR extends BaseResult<? extends N, ? extends E>, R extends BaseResult<T, E>> NR flatRecover(
             Function<? super E, ? extends NR> function,
             R instance) {
         Objects.requireNonNull(function);

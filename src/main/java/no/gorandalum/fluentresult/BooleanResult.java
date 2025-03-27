@@ -280,10 +280,10 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      * @return the {@code BooleanResult} returned from the mapping function, if in
      * error state, otherwise the unaltered {@code BooleanResult} in success state
      */
-    public BooleanResult<E> recover(
+    public BooleanResult<E> flatRecover(
             Function<E, BooleanResult<? extends E>> function) {
         @SuppressWarnings("unchecked")
-        BooleanResult<E> res = (BooleanResult<E>) Implementations.recover(
+        BooleanResult<E> res = (BooleanResult<E>) Implementations.flatRecover(
                 val -> function.apply(error()),
                 this);
         return res;
