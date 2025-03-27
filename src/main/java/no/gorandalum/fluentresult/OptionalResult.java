@@ -463,6 +463,17 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
+     * ...
+     */
+    public <N> Optional<N> recover(
+            Function<E, Optional<N>> function) {
+        Optional<N> res = Implementations.recover(
+                val -> function.apply(error()),
+                this);
+        return res;
+    }
+
+    /**
      * If in success state, applies the optional success value to the given
      * consumer, otherwise does nothing.
      *

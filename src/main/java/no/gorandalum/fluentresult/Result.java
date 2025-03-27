@@ -236,6 +236,16 @@ public final class Result<T, E> extends BaseResult<T, E> {
     }
 
     /**
+     * ...
+     */
+    public <N> N recover(
+            Function<E, N> function) {
+        return Implementations.recover(
+                val -> function.apply(error()),
+                this);
+    }
+
+    /**
      * If in success state, applies the success value to the given consumer,
      * otherwise does nothing.
      *

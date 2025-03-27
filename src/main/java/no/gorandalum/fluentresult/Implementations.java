@@ -201,5 +201,19 @@ final class Implementations {
             return function.apply(instance.error());
         }
     }
+
+    static <T, E, N, NR extends BaseResult<? extends N, ? extends E>, R extends BaseResult<T, E>> N recover(
+            Function<? super E, ? extends N> function,
+            R instance) {
+        Objects.requireNonNull(function);
+
+        if (instance.isSuccess()) {
+            @SuppressWarnings("unchecked")
+            NR res = (NR) instance;
+            return res.value();
+        } else {
+            return function.apply(instance.error());
+        }
+    }
 }
 
