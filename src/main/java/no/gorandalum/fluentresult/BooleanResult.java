@@ -271,14 +271,32 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
     }
 
     /**
-     * If in error state, returns the {@code BooleanResult} from applying the given
-     * mapping function to the error value, otherwise returns the unaltered
-     * {@code BooleanResult} in success state.
-     * @param function the mapping function to apply to the error value to convert to a new {@code BooleanResult}, if
-     * error state
+     * If in error state, returns a {@code BooleanResult} with the success
+     * value from applying the given mapping function to the error value,
+     * otherwise returns the unaltered {@code BooleanResult} in success state.
+     *
+     * @param function the mapping function to apply to the error value to
+     * convert to a new success value, if error state
+     * @return A {@code BooleanResult} containing the value from the mapping
+     * function, if in error state, otherwise the unaltered
+     * {@code BooleanResult} in success state
+     */
+    public BooleanResult<E> recover(
+            Function<E, Boolean> function) {
+        return Implementations.recover(function, BooleanResult::success, this);
+    }
+
+    /**
+     * If in error state, returns the {@code BooleanResult} from applying the
+     * given mapping function to the error value, otherwise returns the
+     * unaltered {@code BooleanResult} in success state.
+     *
+     * @param function the mapping function to apply to the error value to
+     * convert to a new {@code BooleanResult}, if error state
      * {@code BooleanResult} returned by the mapping function
-     * @return the {@code BooleanResult} returned from the mapping function, if in
-     * error state, otherwise the unaltered {@code BooleanResult} in success state
+     * @return the {@code BooleanResult} returned from the mapping function, if
+     * in error state, otherwise the unaltered {@code BooleanResult} in success
+     * state
      */
     public BooleanResult<E> flatRecover(
             Function<E, BooleanResult<? extends E>> function) {
@@ -732,7 +750,7 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
 
     /**
      * Handle the given {@code Callable}. If the {@code Callable} executes
-     * successfully, the {@code BooleanResult} will be in success state 
+     * successfully, the {@code BooleanResult} will be in success state
      * containing the returned value. If the {@code Callable} throws an
      * exception, the {@code BooleanResult} will be in error state containing
      * the thrown exception.
@@ -768,8 +786,8 @@ public final class BooleanResult<E> extends BaseResult<Boolean, E> {
      * @return a {@code BooleanResult} either in success state containing the
      * value from the {@code Callable}, or in error state containing the result
      * after mapping the exception thrown by the {@code Callable}
-     * @throws NullPointerException if the given callable is {@code null} or 
-     * returns {@code null}, or if the given exception mapper function is 
+     * @throws NullPointerException if the given callable is {@code null} or
+     * returns {@code null}, or if the given exception mapper function is
      * {@code null} or returns {@code null}
      */
     public static <E> BooleanResult<E> handle(Callable<Boolean> callable,

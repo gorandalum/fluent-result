@@ -444,30 +444,38 @@ public final class OptionalResult<T, E> extends BaseResult<Optional<T>, E> {
     }
 
     /**
-     * If in error state, returns the {@code OptionalResult} from applying the given
-     * mapping function to the error value, otherwise returns the unaltered
-     * {@code OptionalResult} in success state.
-     * @param function the mapping function to apply to the error value to convert to a new {@code OptionalResult}, if
-     * error state
+     * If in error state, returns a {@code OptionalResult} with the success
+     * value from applying the given mapping function to the error value,
+     * otherwise returns the unaltered {@code OptionalResult} in success state.
+     *
+     * @param function the mapping function to apply to the error value to
+     * convert to a new success value, if error state
+     * @return A {@code OptionalResult} containing the value from the mapping
+     * function, if in error state, otherwise the unaltered
+     * {@code OptionalResult} in success state
+     */
+    public OptionalResult<T, E> recover(
+            Function<E, Optional<T>> function) {
+        return Implementations.recover(function, OptionalResult::success, this);
+    }
+
+    /**
+     * If in error state, returns the {@code OptionalResult} from applying the
+     * given mapping function to the error value, otherwise returns the
+     * unaltered {@code OptionalResult} in success state.
+     *
+     * @param function the mapping function to apply to the error value to
+     * convert to a new {@code OptionalResult}, if error state
+     * @param <N> the type of success value which may be present in the
      * {@code OptionalResult} returned by the mapping function
-     * @return the {@code OptionalResult} returned from the mapping function, if in
-     * error state, otherwise the unaltered {@code OptionalResult} in success state
+     * @return the {@code OptionalResult} returned from the mapping function, if
+     * in error state, otherwise the unaltered {@code OptionalResult} in success
+     * state
      */
     public <N> OptionalResult<N, E> flatRecover(
             Function<E, OptionalResult<? extends N, ? extends E>> function) {
         @SuppressWarnings("unchecked")
         OptionalResult<N, E> res = (OptionalResult<N, E>) Implementations.flatRecover(
-                val -> function.apply(error()),
-                this);
-        return res;
-    }
-
-    /**
-     * ...
-     */
-    public <N> Optional<N> recover(
-            Function<E, Optional<N>> function) {
-        Optional<N> res = Implementations.recover(
                 val -> function.apply(error()),
                 this);
         return res;

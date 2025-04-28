@@ -8,16 +8,20 @@ import static org.assertj.core.api.Assertions.fail;
 class Result_Recover_Test {
 
     @Test
-    void recover_success_shouldReturnValue() {
-        Result<String, String> result = Result.success("Success");
-        String recover = result.recover(e -> "Recovered");
-        assertThat(recover).isEqualTo("Success");
+    void recover_success_shouldRemainExistingSuccess() {
+        Result.success("Success")
+                .recover(e -> "Recovered")
+                .consumeEither(
+                        val -> assertThat(val).isEqualTo("Success"),
+                        err -> fail("Should not be error"));
     }
 
     @Test
-    void recover() {
-        Result<String, String> result = Result.error("Success");
-        String recover = result.recover(e -> "Recovered");
-        assertThat(recover).isEqualTo("Recovered");
+    void recover_error_shouldApplyRecoverFunction() {
+        Result.error("Error")
+                .recover(e -> "Recovered")
+                .consumeEither(
+                        val -> assertThat(val).isEqualTo("Recovered"),
+                        err -> fail("Should not be error"));
     }
 }

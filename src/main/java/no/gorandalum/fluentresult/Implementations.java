@@ -8,7 +8,8 @@ import java.util.function.Supplier;
 
 final class Implementations {
 
-    private Implementations() {}
+    private Implementations() {
+    }
 
     static <T, E, R extends BaseResult<T, E>> T orElse(T other, R instance) {
         return instance.errorOpt().map(err -> other).orElse(instance.value());
@@ -106,7 +107,6 @@ final class Implementations {
     }
 
 
-
     static <T, E, R extends BaseResult<T, E>> R flatRunIfSuccess(
             Supplier<? extends BaseResult<Void, ? extends E>> supplier,
             Function<E, R> errorConstructor,
@@ -202,18 +202,14 @@ final class Implementations {
         }
     }
 
-    static <T, E, N, NR extends BaseResult<? extends N, ? extends E>, R extends BaseResult<T, E>> N recover(
-            Function<? super E, ? extends N> function,
+    static <T, E, R extends BaseResult<T, E>> R recover(
+            Function<E, T> function,
+            Function<T, R> successConstructor,
             R instance) {
         Objects.requireNonNull(function);
-
-        if (instance.isSuccess()) {
-            @SuppressWarnings("unchecked")
-            NR res = (NR) instance;
-            return res.value();
-        } else {
-            return function.apply(instance.error());
-        }
+        return instance.isSuccess() ?
+                instance :
+                successConstructor.apply(function.apply(instance.error()));
     }
 }
 

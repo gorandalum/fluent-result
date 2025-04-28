@@ -8,23 +8,29 @@ import static org.assertj.core.api.Assertions.fail;
 class BooleanResult_Recover_Test {
 
     @Test
-    void flatFlatRecover_success_shouldReturnValue() {
-        BooleanResult<String> result = BooleanResult.success(true);
-        BooleanResult<String> shouldNotBeError = result.flatRecover(error -> BooleanResult.success(true))
+    void recover_success_shouldRemainFalse() {
+        BooleanResult.success(false)
+                .recover(e -> true)
                 .consumeEither(
-                        value -> assertThat(value).isEqualTo(true),
-                        err -> fail("Should not be error")
-                );
-        assertThat(shouldNotBeError).isNotNull();
+                        val -> assertThat(val).isEqualTo(false),
+                        err -> fail("Should not be error"));
     }
 
     @Test
-    void flatFlatRecover() {
-        BooleanResult<String> result = BooleanResult.error("Error");
-        result.flatRecover(error -> BooleanResult.success(true))
+    void recover_empty_shouldRemainTrue() {
+        BooleanResult.success(true)
+                .recover(e -> false)
                 .consumeEither(
-                        value -> assertThat(value).isEqualTo(true),
-                        err -> fail("Should not be error")
-                );
+                        val -> assertThat(val).isEqualTo(true),
+                        err -> fail("Should not be error"));
+    }
+
+    @Test
+    void recover_error_shouldApplyRecoverFunction() {
+        BooleanResult.error("Error")
+                .recover(e -> true)
+                .consumeEither(
+                        val -> assertThat(val).isEqualTo(true),
+                        err -> fail("Should not be error"));
     }
 }

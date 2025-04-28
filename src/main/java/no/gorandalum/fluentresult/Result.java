@@ -216,11 +216,27 @@ public final class Result<T, E> extends BaseResult<T, E> {
     }
 
     /**
+     * If in error state, returns a {@code Result} with the success value from
+     * applying the given mapping function to the error value, otherwise returns
+     * the unaltered {@code Result} in success state.
+     *
+     * @param function the mapping function to apply to the error value to
+     * convert to a new success value, if error state
+     * @return A {@code Result} containing the value from the mapping function,
+     * if in error state, otherwise the unaltered {@code Result} in success state
+     */
+    public Result<T, E> recover(
+            Function<E, T> function) {
+        return Implementations.recover(function, Result::success, this);
+    }
+
+    /**
      * If in error state, returns the {@code Result} from applying the given
      * mapping function to the error value, otherwise returns the unaltered
      * {@code Result} in success state.
-     * @param function the mapping function to apply to the error value to convert to a new {@code Result}, if
-     * error state
+     *
+     * @param function the mapping function to apply to the error value to
+     * convert to a new {@code Result}, if error state
      * @param <N> the type of success value which may be present in the
      * {@code Result} returned by the mapping function
      * @return the {@code Result} returned from the mapping function, if in
@@ -233,16 +249,6 @@ public final class Result<T, E> extends BaseResult<T, E> {
                 val -> function.apply(error()),
                 this);
         return res;
-    }
-
-    /**
-     * ...
-     */
-    public <N> N recover(
-            Function<E, N> function) {
-        return Implementations.recover(
-                val -> function.apply(error()),
-                this);
     }
 
     /**

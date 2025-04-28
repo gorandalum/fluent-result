@@ -8,18 +8,18 @@ import static org.assertj.core.api.Assertions.fail;
 class BooleanResult_FlatRecover_Test {
 
     @Test
-    void flatFlatRecover_success_shouldReturnValue() {
-        BooleanResult<String> result = BooleanResult.success(true);
+    void flatRecover_success_shouldRemainExistingSuccess() {
+        BooleanResult<String> result = BooleanResult.success(false);
         BooleanResult<String> shouldNotBeError = result.flatRecover(error -> BooleanResult.success(true))
                 .consumeEither(
-                        value -> assertThat(value).isEqualTo(true),
+                        value -> assertThat(value).isEqualTo(false),
                         err -> fail("Should not be error")
                 );
         assertThat(shouldNotBeError).isNotNull();
     }
 
     @Test
-    void flatFlatRecover() {
+    void flatRecover_error_shouldApplyRecoverFunction() {
         BooleanResult<String> result = BooleanResult.error("Error");
         result.flatRecover(error -> BooleanResult.success(true))
                 .consumeEither(

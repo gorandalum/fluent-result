@@ -236,12 +236,22 @@ public final class VoidResult<E> extends BaseResult<Void, E> {
     }
 
     /**
+     * If in error state, returns a new {@code VoidResult} in success state,
+     * otherwise returns the unaltered {@code VoidResult} in success state.
+     *
+     * @return a {@code VoidResult} in success state
+     */
+    public VoidResult<E> recover() {
+        return isSuccess() ? this : VoidResult.success();
+    }
+
+    /**
      * If in error state, returns the {@code VoidResult} from applying the given
      * mapping function to the error value, otherwise returns the unaltered
      * {@code VoidResult} in success state.
-     * @param function the mapping function to apply to the error value to convert to a new {@code VoidResult}, if
-     * error state
-     * {@code VoidResult} returned by the mapping function
+     *
+     * @param function the mapping function to apply to the error value to
+     * convert to a new {@code VoidResult}, if error state
      * @return the {@code VoidResult} returned from the mapping function, if in
      * error state, otherwise the unaltered {@code VoidResult} in success state
      */
