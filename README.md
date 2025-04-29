@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/gorandalum/fluent-result.svg?branch=master)](https://travis-ci.com/gorandalum/fluent-result)
+[![Build Status](https://github.com/gorandalum/fluent-result/actions/workflows/build.yml/badge.svg)](https://github.com/gorandalum/fluent-result/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maven Central](https://img.shields.io/maven-central/v/no.gorandalum/fluent-result.svg)](https://mvnrepository.com/artifact/no.gorandalum/fluent-result)
 [![Changelog](https://img.shields.io/badge/changelog-v1.5.0-orange)](https://github.com/gorandalum/fluent-result/blob/master/CHANGELOG.md)
@@ -339,6 +339,9 @@ public Status getCustomerStatus() {
 [`verify(Function<T, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#verify(java.util.function.Function))<br/>
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<T> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
 
+[`recover(Function<E, T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#recover(java.util.function.Function))<br/>
+[`flatRecover(Function<E, Result<T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#flatRecover(java.util.function.Function))<br/>
+
 [`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<T, N> valueFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#fold(java.util.function.Function,java.util.function.Function))<br/>
 [`orElse(T other)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#orElse(T))<br/>
 [`orElseGet(Function<E, T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/Result.html#orElseGet(java.util.function.Function))<br/>
@@ -378,6 +381,9 @@ public Status getCustomerStatus() {
 [`flatMapValueWithOptionalResult(Function<T, OptionalResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatMapValueWithOptionalResult(java.util.function.Function))<br/>
 [`flatMapValueWithBooleanResult(Function<T, BooleanResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatMapValueWithBooleanResult(java.util.function.Function))<br/>
 
+[`flatReplaceEmpty(Supplier<OptionalResult<T, E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatReplaceEmpty(java.util.function.Supplier))<br/>
+[`flatReplaceEmptyWithResult(Supplier<Result<T, E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatReplaceEmptyWithResult(java.util.function.Supplier))<br/>
+
 [`consume(Consumer<Optional<T>> consumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#consume(java.util.function.Consumer))<br/>
 [`consumeValue(Consumer<T> consumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#consumeValue(java.util.function.Consumer))<br/>
 [`consumeError(Consumer<E> consumer)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#consumeError(java.util.function.Consumer))<br/>
@@ -403,6 +409,11 @@ public Status getCustomerStatus() {
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<Optional<T>> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
 [`verifyValue(Function<T, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verifyValue(java.util.function.Function))<br/>
 [`verifyValue(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<T> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#verifyValue(java.util.function.Predicate,java.util.function.Supplier))<br/>
+
+
+[`recover(Function<E, T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#recover(java.util.function.Function))<br/>
+[`flatRecover(Function<E, Result<T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#flatRecover(java.util.function.Function))<br/>
+
 
 [`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<Optional<T>, N> successFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#fold(java.util.function.Function,java.util.function.Function))<br/>
 [`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<T, N> valueFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> emptySupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/OptionalResult.html#fold(java.util.function.Function,java.util.function.Supplier,java.util.function.Function))<br/>
@@ -460,6 +471,9 @@ public Status getCustomerStatus() {
 [`verify(Function<Boolean, VoidResult<E>> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#verify(java.util.function.Function))<br/>
 [`verify(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Predicate<Boolean> predicate,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<E> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#verify(java.util.function.Predicate,java.util.function.Supplier))<br/>
 
+[`recover(Function<E, T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#recover(java.util.function.Function))<br/>
+[`flatRecover(Function<E, Result<T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#flatRecover(java.util.function.Function))<br/>
+
 [`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<Boolean, N> successFunction,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#fold(java.util.function.Function,java.util.function.Function))<br/>
 [`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> trueSupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> falseSupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#fold(java.util.function.Supplier,java.util.function.Supplier,java.util.function.Function))<br/>
 [`orElse(Boolean other)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/BooleanResult.html#orElse(java.lang.Boolean))<br/>
@@ -504,8 +518,10 @@ public Status getCustomerStatus() {
 
 [`flatRunIfSuccess(Suppluer<VoidResult<E>> supplier)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#flatRunIfSuccess(java.util.function.Supplier))<br/>
 
+[`recover(Function<E, T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#recover())<br/>
+[`flatRecover(Function<E, Result<T> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#flatRecover(java.util.function.Function))<br/>
+
 [`fold(`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Supplier<N> valueSupplier,`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Function<E, N> errorFunction)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#fold(java.util.function.Supplier,java.util.function.Function))<br/>
 [`orElseThrow(Function<E, X> function)`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#orElseThrow(java.util.function.Function))<br/>
 
 [`toOptionalResult()`](https://gorandalum.github.io/fluent-result/no/gorandalum/fluentresult/VoidResult.html#toOptionalResult())<br/>
-    
